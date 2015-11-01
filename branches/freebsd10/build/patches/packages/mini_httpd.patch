@@ -1,5 +1,5 @@
---- mini_httpd.c.orig	2014-10-19 07:33:10.000000000 +0100
-+++ mini_httpd.c	2015-02-17 17:39:36.000000000 +0000
+--- mini_httpd.c.orig	2015-10-19 22:28:57.000000000 +0100
++++ mini_httpd.c	2015-11-01 17:32:27.909452000 +0000
 @@ -77,7 +77,7 @@
  
  
@@ -9,7 +9,7 @@
  #endif
  
  #ifndef STDIN_FILENO
-@@ -144,7 +144,7 @@
+@@ -146,7 +146,7 @@
  #define AUTH_FILE ".htpasswd"
  #endif /* AUTH_FILE */
  #ifndef READ_TIMEOUT
@@ -18,7 +18,7 @@
  #endif /* READ_TIMEOUT */
  #ifndef WRITE_TIMEOUT
  #define WRITE_TIMEOUT 300
-@@ -173,13 +173,25 @@
+@@ -175,13 +175,25 @@
  #endif /* USE_IPV6 */
      } usockaddr;
  
@@ -44,7 +44,7 @@
  static int vhost;
  static char* user;
  static char* cgi_pattern;
-@@ -215,6 +227,7 @@
+@@ -217,6 +229,7 @@
  static size_t request_size, request_len, request_idx;
  static int method;
  static char* path;
@@ -52,7 +52,7 @@
  static char* file;
  static char* pathinfo;
  struct stat sb;
-@@ -330,9 +343,15 @@
+@@ -332,9 +345,15 @@
      argv0 = argv[0];
      debug = 0;
      port = 0;
@@ -68,7 +68,7 @@
      vhost = 0;
      cgi_pattern = (char*) 0;
      url_pattern = (char*) 0;
-@@ -385,6 +404,20 @@
+@@ -387,6 +406,20 @@
  	    ++argn;
  	    port = (unsigned short) atoi( argv[argn] );
  	    }
@@ -89,7 +89,7 @@
  	else if ( strcmp( argv[argn], "-d" ) == 0 && argn + 1 < argc )
  	    {
  	    ++argn;
-@@ -439,12 +472,24 @@
+@@ -441,12 +474,24 @@
  	    ++argn;
  	    max_age = atoi( argv[argn] );
  	    }
@@ -114,7 +114,7 @@
  
      cp = strrchr( argv0, '/' );
      if ( cp != (char*) 0 )
-@@ -453,6 +498,16 @@
+@@ -455,6 +500,16 @@
  	cp = argv0;
      openlog( cp, LOG_NDELAY|LOG_PID, LOG_DAEMON );
  
@@ -131,7 +131,7 @@
      if ( port == 0 )
  	{
  #ifdef USE_SSL
-@@ -553,7 +608,7 @@
+@@ -555,7 +610,7 @@
  	ssl_ctx = SSL_CTX_new( SSLv23_server_method() );
  	SSL_CTX_set_options( ssl_ctx, SSL_OP_NO_SSLv3 );
  	if ( certfile[0] != '\0' )
@@ -140,7 +140,7 @@
  		 SSL_CTX_use_PrivateKey_file( ssl_ctx, certfile, SSL_FILETYPE_PEM ) == 0 ||
  		 SSL_CTX_check_private_key( ssl_ctx ) == 0 )
  		{
-@@ -733,6 +788,7 @@
+@@ -735,6 +790,7 @@
  	    exit( 1 );
  	    }
  	/* Check for unnecessary security exposure. */
@@ -148,7 +148,7 @@
  	if ( ! do_chroot )
  	    {
  	    syslog( LOG_WARNING,
-@@ -740,6 +796,7 @@
+@@ -742,6 +798,7 @@
  	    (void) fprintf( stderr,
  		"%s: started as root without requesting chroot(), warning only\n", argv0 );
  	    }
@@ -156,7 +156,7 @@
  	}
  
      /* Catch various signals. */
-@@ -762,6 +819,7 @@
+@@ -764,6 +821,7 @@
  
      init_mime();
  
@@ -164,7 +164,7 @@
      if ( hostname == (char*) 0 )
  	syslog(
  	    LOG_NOTICE, "%.80s starting on port %d", SERVER_SOFTWARE,
-@@ -770,7 +828,8 @@
+@@ -772,7 +830,8 @@
  	syslog(
  	    LOG_NOTICE, "%.80s starting on %.80s, port %d", SERVER_SOFTWARE,
  	    hostname, (int) port );
@@ -174,7 +174,7 @@
      /* Main loop. */
      for (;;)
  	{
-@@ -806,7 +865,7 @@
+@@ -808,7 +867,7 @@
  	    }
  	if ( select( maxfd + 1, &lfdset, (fd_set*) 0, (fd_set*) 0, (struct timeval*) 0 ) < 0 )
  	    {
@@ -183,7 +183,7 @@
  		continue;	/* try again */
  	    syslog( LOG_CRIT, "select - %m" );
  	    perror( "select" );
-@@ -838,6 +897,36 @@
+@@ -840,6 +899,36 @@
  	    exit( 1 );
  	    }
  
@@ -220,7 +220,7 @@
  	/* Fork a sub-process to handle the connection. */
  	r = fork();
  	if ( r < 0 )
-@@ -857,6 +946,26 @@
+@@ -859,6 +948,26 @@
  	    handle_request();
  	    exit( 0 );
  	    }
@@ -247,7 +247,7 @@
  	(void) close( conn_fd );
  	}
      }
-@@ -866,9 +975,9 @@
+@@ -868,9 +977,9 @@
  usage( void )
      {
  #ifdef USE_SSL
@@ -259,7 +259,7 @@
  #endif /* USE_SSL */
      exit( 1 );
      }
-@@ -1140,7 +1249,7 @@
+@@ -1142,7 +1251,7 @@
      char* cp;
      int r, file_len, i;
      const char* index_names[] = {
@@ -268,19 +268,23 @@
  	"index.cgi" };
  
      /* Set up the timeout for reading. */
-@@ -1178,9 +1287,11 @@
-     ** solution is writev() (as used in thttpd), or send the headers with
-     ** send(MSG_MORE) (only available in Linux so far).
-     */
-+	/*
-     r = 1;
-     (void) setsockopt(
- 	conn_fd, IPPROTO_TCP, TCP_NOPUSH, (void*) &r, sizeof(r) );
-+	*/
+@@ -1174,6 +1283,7 @@
+     referrer = "";
+     useragent = "";
+ 
++#if 0
+ #ifdef TCP_NOPUSH
+     if ( ! do_ssl )
+ 	{
+@@ -1187,6 +1297,7 @@
+ 	    conn_fd, IPPROTO_TCP, TCP_NOPUSH, (void*) &r, sizeof(r) );
+ 	}
  #endif /* TCP_NOPUSH */
++#endif
  
  #ifdef USE_SSL
-@@ -1227,11 +1338,13 @@
+     if ( do_ssl )
+@@ -1232,11 +1343,13 @@
  	send_error( 400, "Bad Request", "", "Can't parse request." );
      *protocol++ = '\0';
      protocol += strspn( protocol, " \t\012\015" );
@@ -299,7 +303,7 @@
  
      /* Parse the rest of the request headers. */
      while ( ( line = get_request_line() ) != (char*) 0 )
-@@ -1304,6 +1417,81 @@
+@@ -1309,6 +1422,81 @@
  	method = METHOD_POST;
      else
  	send_error( 501, "Not Implemented", "", "That method is not implemented." );
@@ -381,7 +385,7 @@
  
      strdecode( path, path );
      if ( path[0] != '/' )
-@@ -1378,7 +1566,7 @@
+@@ -1383,7 +1571,7 @@
  
  	got_one: ;
  	}
@@ -390,7 +394,7 @@
  #ifdef USE_SSL
      SSL_free( ssl );
  #endif /* USE_SSL */
-@@ -2147,6 +2335,7 @@
+@@ -2152,6 +2340,7 @@
      int envn;
      char* cp;
      char buf[256];
@@ -398,7 +402,7 @@
  
      envn = 0;
      envp[envn++] = build_env( "PATH=%s", CGI_PATH );
-@@ -2167,6 +2356,7 @@
+@@ -2172,6 +2361,7 @@
      envp[envn++] = build_env(
  	"REQUEST_METHOD=%s", get_method_str( method ) );
      envp[envn++] = build_env( "SCRIPT_NAME=%s", path );
@@ -406,7 +410,7 @@
      if ( pathinfo != (char*) 0 )
  	{
  	envp[envn++] = build_env( "PATH_INFO=/%s", pathinfo );
-@@ -2201,6 +2391,9 @@
+@@ -2206,6 +2396,9 @@
  	envp[envn++] = build_env( "AUTH_TYPE=%s", "Basic" );
      if ( getenv( "TZ" ) != (char*) 0 )
  	envp[envn++] = build_env( "TZ=%s", getenv( "TZ" ) );
@@ -416,7 +420,7 @@
  
      envp[envn] = (char*) 0;
      return envp;
-@@ -2376,8 +2569,6 @@
+@@ -2381,8 +2574,6 @@
  
      send_error_body( s, title, text );
  
@@ -425,7 +429,7 @@
      send_response();
  
  #ifdef USE_SSL
-@@ -2413,23 +2604,16 @@
+@@ -2418,23 +2609,16 @@
      /* Send built-in error page. */
      buflen = snprintf(
  	buf, sizeof(buf), "\
@@ -455,7 +459,7 @@
  
  
  static int
-@@ -2459,7 +2643,7 @@
+@@ -2464,7 +2648,7 @@
      {
      char buf[500];
      int buflen;
@@ -464,7 +468,7 @@
      if ( match( "**MSIE**", useragent ) )
  	{
  	int n;
-@@ -2473,17 +2657,11 @@
+@@ -2478,17 +2662,11 @@
  	buflen = snprintf( buf, sizeof(buf), "-->\n" );
  	add_to_response( buf, buflen );
  	}
@@ -486,7 +490,7 @@
      }
  
  
-@@ -2503,8 +2681,10 @@
+@@ -2508,8 +2686,10 @@
      start_response();
      buflen = snprintf( buf, sizeof(buf), "%s %d %s\015\012", protocol, status, title );
      add_to_response( buf, buflen );
@@ -497,7 +501,7 @@
      now = time( (time_t*) 0 );
      (void) strftime( timebuf, sizeof(timebuf), rfc1123_fmt, gmtime( &now ) );
      buflen = snprintf( buf, sizeof(buf), "Date: %s\015\012", timebuf );
-@@ -3139,8 +3319,10 @@
+@@ -3144,8 +3324,10 @@
      {
      /* Don't need to set up the handler again, since it's a one-shot. */
  
@@ -508,7 +512,7 @@
      closelog();
      exit( 1 );
      }
-@@ -3201,6 +3383,23 @@
+@@ -3206,6 +3388,23 @@
  		}
  	    break;
  	    }
@@ -532,7 +536,7 @@
  	}
  
      /* Restore previous errno. */
-@@ -3233,7 +3432,9 @@
+@@ -3238,7 +3437,9 @@
  static void
  handle_read_timeout( int sig )
      {
@@ -542,22 +546,3 @@
      send_error(
  	408, "Request Timeout", "",
  	"No request appeared within a reasonable time period." );
---- Makefile.orig	2014-10-19 07:33:43.000000000 +0100
-+++ Makefile	2015-02-17 17:45:59.000000000 +0000
-@@ -14,10 +14,12 @@
- # http://www.openssl.org/  Make sure the SSL_TREE definition points to the
- # tree with your OpenSSL installation - depending on how you installed it,
- # it may be in /usr/local instead of /usr/local/ssl.
--#SSL_TREE =	/usr/local/ssl
--#SSL_DEFS =	-DUSE_SSL
--#SSL_INC =	-I$(SSL_TREE)/include
--#SSL_LIBS =	-L$(SSL_TREE)/lib -lssl -lcrypto
-+SSL_TREE =     /usr
-+SSL_DEFS =     -DUSE_SSL
-+SSL_INC =      -I${SSL_TREE}/include
-+SSL_LIBS =     -L${SSL_TREE}/lib -lssl -lcrypto
-+
-+IPV6_DEFS =    -DUSE_IPV6
- 
- 
- BINDIR =	/usr/local/sbin

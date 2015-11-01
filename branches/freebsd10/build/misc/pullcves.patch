@@ -1,0 +1,61 @@
+--- scripts/pullcves.orig	2013-09-17 11:48:03.000000000 +0100
++++ scripts/pullcves	2015-11-01 18:19:54.731767000 +0000
+@@ -61,7 +61,9 @@
+   if [ ! -f ${CVECACHE}/nvdcve-2.0-20${YEAR}.xml ];
+   then
+     printf "Downloading nvdcve-2.0-20${YEAR}.xml... ";
+-    ${WGETCMD} -q -O ${CVECACHE}/nvdcve-2.0-20${YEAR}.xml http://static.nvd.nist.gov/feeds/xml/cve/nvdcve-2.0-20${YEAR}.xml;
++    ${WGETCMD} -q -O ${CVECACHE}/nvdcve-2.0-20${YEAR}.xml.gz http://static.nvd.nist.gov/feeds/xml/cve/nvdcve-2.0-20${YEAR}.xml.gz;
++    printf "ok\nDecompressing nvdcve-2.0-20${YEAR}.xml.gz... ";
++    gunzip ${CVECACHE}/nvdcve-2.0-20${YEAR}.xml.gz
+     printf "ok\nConverting nvdcve-2.0-20${YEAR}.xml to CSV... ";
+     xsltproc ${DATADIR}/nvdcve2simple.xsl ${CVECACHE}/nvdcve-2.0-20${YEAR}.xml > ${CVECACHE}/nvdcve-2.0-20${YEAR}.csv;
+     printf "ok\nLoading in nvdcve-2.0-20${YEAR}.csv in cvechecker.\n";
+@@ -74,29 +76,31 @@
+ then
+   CKSUM="1"
+ else
+-  CKSUM=$(cksum nvdcve-2.0-modified.xml 2>/dev/null);
++  CKSUM=$(cksum nvdcve-2.0-Modified.xml 2>/dev/null);
+ fi
+-printf "Downloading nvdcve-2.0-modified.xml... ";
+-${WGETCMD} -q -N http://static.nvd.nist.gov/feeds/xml/cve/nvdcve-2.0-modified.xml;
+-CKSUM2=$(cksum nvdcve-2.0-modified.xml 2>/dev/null);
+-if [ "${CKSUM2}" != "${CKSUM}" ] || [ -f nvdcve-2.0-modified.xml.1 ];
++printf "Downloading nvdcve-2.0-Modified.xml... ";
++${WGETCMD} -q -N http://static.nvd.nist.gov/feeds/xml/cve/nvdcve-2.0-Modified.xml.gz;
++printf "ok\nDecompressing nvdcve-2.0-Modified.xml.gz... ";
++gunzip ${CVECACHE}/nvdcve-2.0-Modified.xml.gz
++CKSUM2=$(cksum nvdcve-2.0-Modified.xml 2>/dev/null);
++if [ "${CKSUM2}" != "${CKSUM}" ] || [ -f nvdcve-2.0-Modified.xml.1 ];
+ then
+   printf "ok (downloaded)\n";
+-  test -f nvdcve-2.0-modified.xml.1 && mv nvdcve-2.0-modified.xml.1 nvdcve-2.0-modified.xml;
+-  printf "Converting nvdcve-2.0-modified.xml to CSV... ";
+-  if [ -f ${CVECACHE}/nvdcve-2.0-modified.csv ];
++  test -f nvdcve-2.0-Modified.xml.1 && mv nvdcve-2.0-Modified.xml.1 nvdcve-2.0-Modified.xml;
++  printf "Converting nvdcve-2.0-Modified.xml to CSV... ";
++  if [ -f ${CVECACHE}/nvdcve-2.0-Modified.csv ];
+   then
+-    mv ${CVECACHE}/nvdcve-2.0-modified.csv ${CVECACHE}/nvdcve-2.0-modified.csv.old;
++    mv ${CVECACHE}/nvdcve-2.0-Modified.csv ${CVECACHE}/nvdcve-2.0-Modified.csv.old;
+   else
+-    touch ${CVECACHE}/nvdcve-2.0-modified.csv.old;
++    touch ${CVECACHE}/nvdcve-2.0-Modified.csv.old;
+   fi
+-  xsltproc ${DATADIR}/nvdcve2simple.xsl ${CVECACHE}/nvdcve-2.0-modified.xml > ${CVECACHE}/nvdcve-2.0-modified.csv.unsorted;
++  xsltproc ${DATADIR}/nvdcve2simple.xsl ${CVECACHE}/nvdcve-2.0-Modified.xml > ${CVECACHE}/nvdcve-2.0-Modified.csv.unsorted;
+   printf "ok\nGathering differences with last pull... ";
+-  sort ${CVECACHE}/nvdcve-2.0-modified.csv.unsorted > ${CVECACHE}/nvdcve-2.0-modified.csv;
+-  rm ${CVECACHE}/nvdcve-2.0-modified.csv.unsorted;
+-  diff ${CVECACHE}/nvdcve-2.0-modified.csv.old ${CVECACHE}/nvdcve-2.0-modified.csv | grep '^> ' | sed -e 's:^> ::g' > ${CVECACHE}/nvdcve-2.0-modified.delta;
+-  printf "ok\nLoading in nvdcve-2.0-modified.csv differences in cvechecker.\n";
+-  cvechecker -c ${CVECACHE}/nvdcve-2.0-modified.delta || die "Could not import nvdcve-2.0-modified.delta";
++  sort ${CVECACHE}/nvdcve-2.0-Modified.csv.unsorted > ${CVECACHE}/nvdcve-2.0-Modified.csv;
++  rm ${CVECACHE}/nvdcve-2.0-Modified.csv.unsorted;
++  diff ${CVECACHE}/nvdcve-2.0-Modified.csv.old ${CVECACHE}/nvdcve-2.0-Modified.csv | grep '^> ' | sed -e 's:^> ::g' > ${CVECACHE}/nvdcve-2.0-Modified.delta;
++  printf "ok\nLoading in nvdcve-2.0-Modified.csv differences in cvechecker.\n";
++  cvechecker -c ${CVECACHE}/nvdcve-2.0-Modified.delta || die "Could not import nvdcve-2.0-Modified.delta";
+   DLCVE=1;
+ else
+   printf "ok (not downloaded, same file)\n";
