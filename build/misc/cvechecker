@@ -1,0 +1,25 @@
+#install dependencies
+
+pkg install sqlite3
+pkg install libxslt
+pkg install wget
+pkg install pkgconf
+pkg install argp-standalone
+pkg install libconfig
+
+#install cvechecker
+
+fetch http://downloads.sourceforge.net/project/cvechecker/cvechecker-3.5.tar.gz
+tar -zxvf cvechecker-3.5.tar.gz
+cd cvechecker-3.5
+patch < pullcves.patch
+./configure --enable-sqlite3
+make LDFLAGS="-L/usr/local/lib -largp"
+make install
+
+#setup and use cvechecker
+cvechecker --initdbs
+pullcves pull
+
+cvechecker -r -C -w watchlist.txt | cut -d ',' -f 3,4 | tr ':' ',' | cut -d ',' -f 4,5,9
+
