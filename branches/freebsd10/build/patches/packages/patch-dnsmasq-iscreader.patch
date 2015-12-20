@@ -1,3 +1,13 @@
+--- src/config.h.orig	2015-12-20 18:03:56.980389000 +0000
++++ src/config.h	2015-12-20 18:04:22.949884000 +0000
+@@ -52,6 +52,7 @@
+ #define SOA_EXPIRY 1209600 /* SOA expiry default */
+ #define LOOP_TEST_DOMAIN "test" /* domain for loop testing, "test" is reserved by RFC 2606 and won't therefore clash */
+ #define LOOP_TEST_TYPE T_TXT
++#define HAVE_ISC_READER
+  
+ /* compile-time options: uncomment below to enable or do eg.
+    make COPTS=-DHAVE_BROKEN_RTC
 --- ./src/config.h.orig	2013-04-17 12:52:49.000000000 +0000
 +++ ./src/config.h	2013-12-08 14:38:15.000000000 +0000
 @@ -65,6 +65,10 @@
@@ -10,22 +20,6 @@
 +
  HAVE_TFTP
     define this to get dnsmasq's built-in TFTP server.
- 
-@@ -138,10 +142,15 @@
- #define HAVE_IPSET 
- /* #define HAVE_LUASCRIPT */
- /* #define HAVE_BROKEN_RTC */
-+#define HAVE_ISC_READER
- /* #define HAVE_DBUS */
- /* #define HAVE_IDN */
- /* #define HAVE_CONNTRACK */
- 
-+#if defined(HAVE_BROKEN_RTC) && defined(HAVE_ISC_READER)
-+#  error HAVE_ISC_READER is not compatible with HAVE_BROKEN_RTC
-+#endif
-+
- 
- /* Default locations for important system files. */
  
 @@ -351,6 +360,10 @@
  #ifdef NO_FORK
@@ -329,14 +323,14 @@
 +}
 +
 +#endif
---- Makefile.orig	2013-12-08 14:42:24.000000000 +0000
-+++ Makefile	2013-12-08 14:42:59.000000000 +0000
-@@ -65,7 +65,7 @@
+--- dnsmasq-2.75/Makefile.orig	2015-12-20 18:09:20.303170000 +0000
++++ dnsmasq-2.75/Makefile	2015-12-20 18:09:58.033616000 +0000
+@@ -72,7 +72,7 @@
  objs = cache.o rfc1035.o util.o option.o forward.o network.o \
         dnsmasq.o dhcp.o lease.o rfc2131.o netlink.o dbus.o bpf.o \
         helper.o tftp.o log.o conntrack.o dhcp6.o rfc3315.o \
--       dhcp-common.o outpacket.o radv.o slaac.o auth.o ipset.o
-+       dhcp-common.o outpacket.o radv.o slaac.o auth.o ipset.o isc.o
+-       dhcp-common.o outpacket.o radv.o slaac.o auth.o ipset.o \
++       dhcp-common.o outpacket.o radv.o slaac.o auth.o ipset.o isc.o \
+        domain.o dnssec.o blockdata.o tables.o loop.o inotify.o poll.o
  
  hdrs = dnsmasq.h config.h dhcp-protocol.h dhcp6-protocol.h \
-        dns-protocol.h radv-protocol.h
