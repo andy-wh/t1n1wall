@@ -1297,7 +1297,7 @@ function filter_rules_spoofcheck_generate($ifname, $if, $sa, $sn, $log, $ipv6 = 
 			}
 		}
 
-		$ipfrules .= "skip 1 in on family $inetfamily $if from $sa/$sn to any\n";
+		$ipfrules .= "skip 1 in on $if family $inetfamily from $sa/$sn to any\n";
 		$ipfrules .= "block in $log quick on $if family $inetfamily  from any to any\n";
 	} else {
 		$ipfrules .= "block in $log quick on $if family $inetfamily  from ! $sa/$sn to any\n";
