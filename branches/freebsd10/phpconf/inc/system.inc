@@ -919,7 +919,10 @@ function ledindicator() {
 		if (is_dir("/dev/led")) {
 			mwexec("/usr/local/sbin/ledindicator");
 		}
+	} else {
+		killbyname("ledindicator");
 	}
+	return 0;
 }
 
 function system_check_reset_button() {
@@ -1028,4 +1031,21 @@ function storage_disk_get_name($device) {
 	return $name;
 }
 
+function configure_advanced_sysctls() {
+	global $config;
+	
+	if (isset($config['system']['tso'])) {
+		mwexec("/sbin/sysctl net.inet.tcp.tso=1");
+	} else {
+		mwexec("/sbin/sysctl net.inet.tcp.tso=0");
+	}
+
+	if (isset($config['system']['fastforward'])) {
+		mwexec("/sbin/sysctl net.inet.ip.fastforwarding=1");
+	} else {
+		mwexec("/sbin/sysctl net.inet.ip.fastforwarding=0");
+	}
+	
+	return 0;
+}
 ?>

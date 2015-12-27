@@ -15,6 +15,8 @@ fi
 
 # patch kernel / sources
 		cd $MW_BUILDPATH/tmp
+#patch ipnat for fastforward as kern/72210
+		patch < $MW_BUILDPATH/freebsd10/build/patches/kernel/ip_nat_ff.kern72210.patch
 # revert checksum changes submitted as kern/203585
 		patch < $MW_BUILDPATH/freebsd10/build/patches/kernel/ip6_checksums.patch
 # apuled kern/189772

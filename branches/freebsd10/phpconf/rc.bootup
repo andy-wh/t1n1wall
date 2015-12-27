@@ -77,6 +77,9 @@
 	
 	/* generate resolv.conf */
 	system_resolvconf_generate();
+
+	/* configure sysctls from advanced setup page */
+	configure_advanced_sysctls();
 	
 	/* establish ipfilter ruleset */
 	filter_configure();
