@@ -52,7 +52,6 @@
     WAN IP address: $wanip
     
     Port configuration:
-    
     LAN   -> {$config['interfaces']['lan']['if']}
     WAN   -> {$config['interfaces']['wan']['if']}
 

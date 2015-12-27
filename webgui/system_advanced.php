@@ -48,6 +48,8 @@ $pconfig['ipsecdnsinterval'] = $config['ipsec']['dns-interval'];
 $pconfig['tcpidletimeout'] = $config['filter']['tcpidletimeout'];
 $pconfig['preferoldsa_enable'] = isset($config['ipsec']['preferoldsa']);
 $pconfig['polling_enable'] = isset($config['system']['polling']);
+$pconfig['tso_enable'] = isset($config['system']['tso']);
+$pconfig['ff_enable'] = isset($config['system']['fastforward']);
 $pconfig['ipfstatentries'] = $config['diag']['ipfstatentries'];
 $pconfig['ralink_enable'] = isset($config['system']['ralink']);
 $pconfig['portrangelow'] = $config['nat']['portrange-low'];
@@ -120,6 +122,10 @@ if ($_POST) {
 		$config['ipsec']['dns-interval'] = $_POST['ipsecdnsinterval'];
 		$oldpreferoldsa = isset($config['ipsec']['preferoldsa']);
 		$config['ipsec']['preferoldsa'] = $_POST['preferoldsa_enable'] ? true : false;
+		$oldtso = isset($config['system']['tso']);
+		$config['system']['tso'] = $_POST['tso_enable'] ? true : false;
+		$oldff = isset($config['system']['fastforward']);
+		$config['system']['fastforward'] = $_POST['ff_enable'] ? true : false;
 		$oldpolling = isset($config['system']['polling']);
 		$config['system']['polling'] = $_POST['polling_enable'] ? true : false;
 		if (!$_POST['ipfstatentries'])
@@ -156,6 +162,9 @@ if ($_POST) {
 			config_lock();
 			$retval = filter_configure();
 			$retval |= interfaces_optional_configure();
+			$retval |= configure_advanced_sysctls();
+			$retval |= ledindicator();
+			
 			if (isset($config['ipsec']['preferoldsa']) != $oldpreferoldsa || $config['ipsec']['dns-interval'] != $oldipsecdnsinterval) {
 				$retval |= vpn_ipsec_configure();
 			}
@@ -365,6 +374,22 @@ if ($_POST) {
 					data instead of relying on interrupts. This can reduce CPU load and therefore increase
 					throughput, at the expense of a slightly higher forwarding delay (the devices are polled 1000 times
 					per second). Not all NICs support polling; see the t1n1wall homepage for a list of supported cards.
+					</td>
+                </tr>
+				<tr> 
+                  <td width="22%" valign="top" class="vncell">Enable TSO</td>
+                  <td width="78%" class="vtable"> 
+                    <input name="tso_enable" type="checkbox" id="tso_enable" value="yes" <?php if ($pconfig['tso_enable']) echo "checked"; ?>>
+                    <strong>Use TCP Segment Offload</strong><br>
+					TSO may not work on all cards, so here you can enable it.
+					</td>
+                </tr>
+				<tr> 
+                  <td width="22%" valign="top" class="vncell">FastForward</td>
+                  <td width="78%" class="vtable"> 
+                    <input name="ff_enable" type="checkbox" id="ff_enable" value="yes" <?php if ($pconfig['ff_enable']) echo "checked"; ?>>
+                    <strong>Use FastForward</strong><br>
+					Fastforward may increase performance , but may also break things.  Here you can enable it
 					</td>
                 </tr>
 				<tr>

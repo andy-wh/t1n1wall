@@ -35,7 +35,6 @@ while : ; do
 
 # display a cheap menu
 echo
-echo
 echo "t1n1wall console setup"
 echo "**********************"
 echo "1) Interfaces: assign network ports"

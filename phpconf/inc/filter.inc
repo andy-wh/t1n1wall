@@ -69,9 +69,6 @@ function filter_configure($ipv4only = false) {
 	
 	mwexec("/sbin/sysctl net.inet.ipf.fr_tcphalfclosed=240");
 	mwexec("/sbin/sysctl net.inet.ipf.fr_udptimeout=240");
-	
-	/* hack to turn off TSO until per nic settings are done */
-	mwexec("/sbin/sysctl net.inet.tcp.tso=0");
 
 	/* generate ipnat rules */
 	$ipnatrules = filter_nat_rules_generate();
