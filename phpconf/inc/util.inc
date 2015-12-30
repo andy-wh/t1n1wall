@@ -30,6 +30,15 @@
 
 require_once("IPv6.php");
 
+function ip2long32($val) {
+ return make32bit(ip2long($val));
+}
+
+function make32bit($unsafeval) {
+ list(, $32bitval) = unpack('l',pack('l',$unsafeval));
+ return $32bitval;
+}
+
 /* sort array by descr */
 function sortdescr($a,$b)
 {
@@ -64,7 +73,7 @@ function gen_subnet($ipaddr, $bits) {
 	if (!is_ipaddr($ipaddr) || !is_numeric($bits))
 		return "";
 	
-	return long2ip(ip2long($ipaddr) & gen_subnet_mask_long($bits));
+	return long2ip(ip2long32($ipaddr) & gen_subnet_mask_long($bits));
 }
 
 /* return the subnet address given a host address and a subnet bit count, IPv6 variant */
@@ -88,7 +97,7 @@ function gen_subnet_max($ipaddr, $bits) {
 	if (!is_ipaddr($ipaddr) || !is_numeric($bits))
 		return "";
 	
-	return long2ip(ip2long($ipaddr) | ~gen_subnet_mask_long($bits));
+	return long2ip(ip2long32($ipaddr) | ~gen_subnet_mask_long($bits));
 }
 
 /* returns a subnet mask (long given a bit count) */
@@ -98,7 +107,7 @@ function gen_subnet_mask_long($bits) {
 		$sm >>= 1;
 		$sm |= 0x80000000;
 	}
-	return $sm;
+	return make32bit($sm);
 }
 
 /* same as above but returns a string */
@@ -125,7 +134,7 @@ function is_ipaddr($ipaddr) {
 	if (!is_string($ipaddr))
 		return false;
 		
-	$ip_long = ip2long($ipaddr);
+	$ip_long = ip2long32($ipaddr);
 	$ip_reverse = long2ip($ip_long);
  
 	if ($ipaddr == $ip_reverse)
@@ -236,7 +245,7 @@ function is_networkaddr4or6($subnet) {
 	if (is_subnet($subnet)) {
 		list($hp,$np) = explode('/', $subnet);
 		/* get network address */
-		$network = long2ip((ip2long($hp)) & ((-1 << (32 - (int)$np))));
+		$network = long2ip((ip2long32($hp)) & ((-1 << (32 - (int)$np))));
 		if ($hp == $network) {
 			return true;
 		}
@@ -575,8 +584,8 @@ function check_subnets_overlap($subnet1, $bits1, $subnet2, $bits2) {
 	else
 		$relbits = $bits2;
 	
-	$sn1 = gen_subnet_mask_long($relbits) & ip2long($subnet1);
-	$sn2 = gen_subnet_mask_long($relbits) & ip2long($subnet2);
+	$sn1 = gen_subnet_mask_long($relbits) & ip2long32($subnet1);
+	$sn2 = gen_subnet_mask_long($relbits) & ip2long32($subnet2);
 	
 	if ($sn1 == $sn2)
 		return true;
@@ -586,9 +595,9 @@ function check_subnets_overlap($subnet1, $bits1, $subnet2, $bits2) {
 
 /* compare two IP addresses */
 function ipcmp($a, $b) {
-	if (ip2long($a) < ip2long($b))
+	if (ip2long32($a) < ip2long32($b))
 		return -1;
-	else if (ip2long($a) > ip2long($b))
+	else if (ip2long32($a) > ip2long32($b))
 		return 1;
 	else
 		return 0;
@@ -598,7 +607,7 @@ function ipcmp($a, $b) {
 function ip_in_subnet($addr,$subnet) {
 	list($ip, $mask) = explode('/', $subnet);
 	$mask = 0xffffffff << (32 - $mask);
-	return ((ip2long($addr) & $mask) == (ip2long($ip) & $mask));
+	return ((ip2long32($addr) & $mask) == (ip2long32($ip) & $mask));
 }
 
 /* verify (and remove) the digital signature on a file - returns 0 if OK */
@@ -756,12 +765,12 @@ function generate_self_signed_cert($orgname, $cn) {
    return an array of error strings (or an empty array on success) */
 function check_dhcp_range($if_ipaddr, $if_subnet, $range_from, $range_to) {
 	$input_errors = array();
-	$subnet_start = (ip2long($if_ipaddr) & gen_subnet_mask_long($if_subnet));
-	$subnet_end = (ip2long($if_ipaddr) | (~gen_subnet_mask_long($if_subnet)));
+	$subnet_start = (ip2long32($if_ipaddr) & gen_subnet_mask_long($if_subnet));
+	$subnet_end = (ip2long32($if_ipaddr) | (~gen_subnet_mask_long($if_subnet)));
 	
-	$rangefrom = ip2long($range_from);
-	$rangeto = ip2long($range_to);
-	$ifip = ip2long($if_ipaddr);
+	$rangefrom = ip2long32($range_from);
+	$rangeto = ip2long32($range_to);
+	$ifip = ip2long32($if_ipaddr);
 	
 	if (($rangefrom < $subnet_start) || ($rangefrom > $subnet_end) ||
 	    ($rangeto < $subnet_start) || ($rangeto > $subnet_end))
