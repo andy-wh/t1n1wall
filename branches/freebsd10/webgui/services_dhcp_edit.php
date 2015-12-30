@@ -93,7 +93,7 @@ if ($_POST) {
 		if (isset($id) && ($a_maps[$id]) && ($a_maps[$id] === $mapent))
 			continue;
 
-		if ( $_POST['ipaddr'] && is_ipaddr($_POST['ipaddr']) && (ip2long($mapent['ipaddr']) == ip2long($_POST['ipaddr']))) {
+		if ( $_POST['ipaddr'] && is_ipaddr($_POST['ipaddr']) && (ip2long32($mapent['ipaddr']) == ip2long32($_POST['ipaddr']))) {
 			$input_errors[] = "This IPv4 address already exists.";
 			break;
 		}
@@ -116,17 +116,17 @@ if ($_POST) {
 		
 	/* make sure it's not within the dynamic subnet */
 	if ($_POST['ipaddr'] && is_ipaddr($_POST['ipaddr'])) {
-		$dynsubnet_start = ip2long($config['dhcpd'][$if]['range']['from']);
-		$dynsubnet_end = ip2long($config['dhcpd'][$if]['range']['to']);
-		$lansubnet_start = (ip2long($ifcfg['ipaddr']) & gen_subnet_mask_long($ifcfg['subnet']));
-		$lansubnet_end = (ip2long($ifcfg['ipaddr']) | (~gen_subnet_mask_long($ifcfg['subnet'])));
+		$dynsubnet_start = ip2long32($config['dhcpd'][$if]['range']['from']);
+		$dynsubnet_end = ip2long32($config['dhcpd'][$if]['range']['to']);
+		$lansubnet_start = (ip2long32($ifcfg['ipaddr']) & gen_subnet_mask_long($ifcfg['subnet']));
+		$lansubnet_end = (ip2long32($ifcfg['ipaddr']) | (~gen_subnet_mask_long($ifcfg['subnet'])));
 		
-		if ((ip2long($_POST['ipaddr']) >= $dynsubnet_start) &&
-				(ip2long($_POST['ipaddr']) <= $dynsubnet_end)) {
+		if ((ip2long32($_POST['ipaddr']) >= $dynsubnet_start) &&
+				(ip2long32($_POST['ipaddr']) <= $dynsubnet_end)) {
 			$input_errors[] = "Static IP addresses may not lie within the dynamic client range.";
 		}
-		if ((ip2long($_POST['ipaddr']) < $lansubnet_start) ||
-			(ip2long($_POST['ipaddr']) > $lansubnet_end)) {
+		if ((ip2long32($_POST['ipaddr']) < $lansubnet_start) ||
+			(ip2long32($_POST['ipaddr']) > $lansubnet_end)) {
 			$input_errors[] = "The IP address must lie in the {$ifcfg['descr']} subnet.";
 		}
 	}

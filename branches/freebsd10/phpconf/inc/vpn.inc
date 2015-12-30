@@ -665,7 +665,7 @@ function vpn_pptpd_configure() {
 				$nunits = 16;
 			
 			$startip = $pptpdcfg['remoteip'];
-			$endip = long2ip(ip2long($pptpdcfg['remoteip']) + $nunits - 1);
+			$endip = long2ip(ip2long32($pptpdcfg['remoteip']) + $nunits - 1);
 			
 			$mpdconf = <<<EOD
 startup:
@@ -837,7 +837,7 @@ function vpn_ipsec_l2tp_configure() {
 				$nunits = 16;
 			
 			$startip = $l2tpdcfg['remoteip'];
-			$endip = long2ip(ip2long($l2tpdcfg['remoteip']) + $nunits - 1);
+			$endip = long2ip(ip2long32($l2tpdcfg['remoteip']) + $nunits - 1);
 			
 			$mpdconf = <<<EOD
 startup:

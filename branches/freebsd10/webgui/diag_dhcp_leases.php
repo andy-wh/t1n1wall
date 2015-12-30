@@ -157,9 +157,9 @@ foreach ($leases as $data) {
 		} else {
 			$fspans = $fspane = "";
 		}
-		$lip = ip2long($data['ip']);
+		$lip = ip2long32($data['ip']);
 		foreach ($config['dhcpd'] as $dhcpif => $dhcpifconf) {
-			if (($lip >= ip2long($dhcpifconf['range']['from'])) && ($lip <= ip2long($dhcpifconf['range']['to']))) {
+			if (($lip >= ip2long32($dhcpifconf['range']['from'])) && ($lip <= ip2long32($dhcpifconf['range']['to']))) {
 				$data['if'] = $dhcpif;
 				break;
 			}

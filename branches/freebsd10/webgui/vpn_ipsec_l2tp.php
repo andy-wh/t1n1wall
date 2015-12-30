@@ -82,11 +82,11 @@ if ($_POST) {
 		
 		if (!$input_errors) {	
 			$_POST['remoteip'] = $pconfig['remoteip'] = gen_subnet($_POST['remoteip'], $ipsec_l2tp_subnet_sizes[$_POST['nunits']]);
-			$subnet_start = ip2long($_POST['remoteip']);
-			$subnet_end = ip2long($_POST['remoteip']) + $_POST['nunits'] - 1;
+			$subnet_start = ip2long32($_POST['remoteip']);
+			$subnet_end = ip2long32($_POST['remoteip']) + $_POST['nunits'] - 1;
 						
-			if ((ip2long($_POST['localip']) >= $subnet_start) && 
-			    (ip2long($_POST['localip']) <= $subnet_end)) {
+			if ((ip2long32($_POST['localip']) >= $subnet_start) && 
+			    (ip2long32($_POST['localip']) <= $subnet_end)) {
 				$input_errors[] = "The specified server address lies in the remote subnet.";	
 			}
 			if ($_POST['localip'] == $config['interfaces']['lan']['ipaddr']) {
