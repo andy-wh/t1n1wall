@@ -35,8 +35,8 @@ function ip2long32($val) {
 }
 
 function make32bit($unsafeval) {
- list(, $32bitval) = unpack('l',pack('l',$unsafeval));
- return $32bitval;
+ list(, $val32bit) = unpack('l',pack('l',$unsafeval));
+ return $val32bit;
 }
 
 /* sort array by descr */
