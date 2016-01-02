@@ -133,7 +133,7 @@ function enable_change(enable_over) {
 <?php 
    	$tabs = array('System' => 'diag_logs.php',
            		  'Firewall' => 'diag_logs_filter.php',
-           		  'DHCP' => 'diag_logs_dhcp.php',
+           		  'DHCP/DNS' => 'diag_logs_dhcp.php',
            		  'Captive portal' => 'diag_logs_portal.php',
            		  'PPTP/L2TP VPN' => 'diag_logs_vpn.php',
            		  'Settings' => 'diag_logs_settings.php');
@@ -203,7 +203,7 @@ function enable_change(enable_over) {
 								  <input name="filter" id="filter" type="checkbox" value="yes" <?php if ($pconfig['filter']) echo "checked"; ?>>
 		                          firewall events<br>
 								  <input name="dhcp" id="dhcp" type="checkbox" value="yes" <?php if ($pconfig['dhcp']) echo "checked"; ?>>
-		                          DHCP service events<br>
+		                          DHCP/DNS service events<br>
 								  <input name="portalauth" id="portalauth" type="checkbox" value="yes" <?php if ($pconfig['portalauth']) echo "checked"; ?>>
 		                          Captive portal<br> 
 								  <input name="vpn" id="vpn" type="checkbox" value="yes" <?php if ($pconfig['vpn']) echo "checked"; ?>>

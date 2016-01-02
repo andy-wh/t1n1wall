@@ -93,8 +93,8 @@ export CC=gcc46
         tar -zxf $MW_BUILDPATH/freebsd10/build/local-sources/dnsmasq-2.75.tar.gz
         cd dnsmasq-2.75
         cp $MW_BUILDPATH/freebsd10/build/patches/packages/patch-dnsmasq-iscreader.patch .
-        patch < patch-dnsmasq-iscreader.patch
-        make COPTS=-DNO_DHCPv6 COPTS+=-DNO_AUTH COPTS+=-DNO_TFTP COPTS+=-DNO_SCRIPT COPTS+=-DNO_LARGEFILE COPTS+=-DNO_DHCP6
+        # patch < patch-dnsmasq-iscreader.patch
+        make COPTS+=-DNO_AUTH COPTS+=-DNO_TFTP COPTS+=-DNO_SCRIPT COPTS+=-DNO_LARGEFILE 
         install -s src/dnsmasq $MW_BUILDPATH/t1n1fs/usr/local/sbin
         rm patch-dnsmasq-iscreader.patch
 # dudders
@@ -116,7 +116,7 @@ export CC=gcc46
         cd $PORTSDIR/net/isc-dhcp41-server
         cp $MW_BUILDPATH/freebsd10/build/patches/packages/isc-dhcpd/patch-server.db.c files/
         make
-        install -s $WRKDIRPREFIX/$PORTSDIR/net/isc-dhcp41-server/work/dhcp-*/server/dhcpd $MW_BUILDPATH/t1n1fs/usr/local/sbin/
+        # install -s $WRKDIRPREFIX/$PORTSDIR/net/isc-dhcp41-server/work/dhcp-*/server/dhcpd $MW_BUILDPATH/t1n1fs/usr/local/sbin/
         rm files/patch-server.db.c
 # ISC dhcp-client
         cd $PORTSDIR/net/isc-dhcp41-client
@@ -125,7 +125,7 @@ export CC=gcc46
 # ISC dhcp-relay
         cd $PORTSDIR/net/isc-dhcp41-relay
         make
-        install -s $WRKDIRPREFIX/$PORTSDIR/net/isc-dhcp41-relay/work/dhcp-*/relay/dhcrelay $MW_BUILDPATH/t1n1fs/usr/local/sbin/
+        # install -s $WRKDIRPREFIX/$PORTSDIR/net/isc-dhcp41-relay/work/dhcp-*/relay/dhcrelay $MW_BUILDPATH/t1n1fs/usr/local/sbin/
 # ipsec-tools
         cd $PORTSDIR/security/ipsec-tools
         patch < $MW_BUILDPATH/freebsd10/build/patches/packages/ipsec-tools.Makefile.patch
@@ -142,7 +142,7 @@ export CC=gcc46
 	cd $PORTSDIR/net/dhcp6
         make
 	install -s $WRKDIRPREFIX/$PORTSDIR/net/dhcp6/work/wide-dhc*/dhcp6c $MW_BUILDPATH/t1n1fs/usr/local/sbin
-	install -s $WRKDIRPREFIX/$PORTSDIR/net/dhcp6/work/wide-dhc*/dhcp6s $MW_BUILDPATH/t1n1fs/usr/local/sbin
+	# install -s $WRKDIRPREFIX/$PORTSDIR/net/dhcp6/work/wide-dhc*/dhcp6s $MW_BUILDPATH/t1n1fs/usr/local/sbin
 # sixxs-aiccu		
 	cd $PORTSDIR/net/sixxs-aiccu
 	cp $MW_BUILDPATH/freebsd10/build/patches/packages/patch-aiccu-common.c files/

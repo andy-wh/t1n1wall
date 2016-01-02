@@ -215,7 +215,7 @@ function format_ipf_ip($ipfip,$uport) {
 <?php 
    	$tabs = array('System' => 'diag_logs.php',
            		  'Firewall' => 'diag_logs_filter.php',
-           		  'DHCP' => 'diag_logs_dhcp.php',
+           		  'DHCP/DNS' => 'diag_logs_dhcp.php',
            		  'Captive portal' => 'diag_logs_portal.php',
            		  'PPTP/L2TP VPN' => 'diag_logs_vpn.php',
            		  'Settings' => 'diag_logs_settings.php');

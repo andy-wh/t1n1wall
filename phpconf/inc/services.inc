@@ -276,9 +276,7 @@ EOD;
 }
 function services_dhcpd_configure() {
 	global $config, $g;
-	
-	/* kill any running dhcpd */
-	killbypid("{$g['varrun_path']}/dhcpd.pid");
+
 	
 	$syscfg = $config['system'];
 	$dhcpdcfg = $config['dhcpd'];
@@ -295,26 +293,30 @@ function services_dhcpd_configure() {
 	
 	if (!$dhcpdenable)
 		return 0;
-	
+
 	if ($g['booting'])
 		echo "Starting DHCP service... ";
 	else
 		sleep(1);
 	
 	/* write dhcpd.conf */
-	$fd = fopen("{$g['varetc_path']}/dhcpd.conf", "w");
+	if (file_exists("{$g['varetc_path']}/dnsmasq/dhcpd.conf")) {
+		unlink("{$g['varetc_path']}/dnsmasq/dhcpd.conf");
+	}	
+
+	$fd = fopen("{$g['varetc_path']}/dnsmasq/dhcpd.conf", "w");
 	if (!$fd) {
 		printf("Error: cannot open dhcpd.conf in services_dhcpd_configure().\n");
 		return 1;
 	}
 	
+	/* kill any running dnsmasq */
+	sigkillbypid("{$g['varrun_path']}/dnsmasq.pid", "TERM");
+
 	$dhcpdconf = <<<EOD
-option domain-name "{$syscfg['domain']}";
-default-lease-time 7200;
-max-lease-time 86400;
-authoritative;
-log-facility local7;
-ddns-update-style none;
+dhcp-option=option:domain-name, "{$syscfg['domain']}";
+dhcp-authoritative
+dhcp-leasefile=/var/db/dnsmasq.dhcpd.leases
 
 EOD;
 	
@@ -331,17 +333,18 @@ EOD;
 		$subnet = gen_subnet($ifcfg['ipaddr'], $ifcfg['subnet']);
 		$subnetmask = gen_subnet_mask($ifcfg['subnet']);
 		
-		$dnscfg = "";
-		
+		$dhcpdconf .= "dhcp-range=set:lan,{$dhcpifconf['range']['from']},{$dhcpifconf['range']['to']}";
+
+		if (isset($dhcpifconf['denyunknown'])) 
+		   $dhcpdconf .= ",static";
+
+		if ($dhcpifconf['defaultleasetime'])
+			$dhcpdconf .= ",{$dhcpifconf['defaultleasetime']}s";
+
+		$dhcpdconf .= "\n";
+
 		if ($dhcpifconf['domain']) {
-			$dnscfg .= "	option domain-name \"{$dhcpifconf['domain']}\";\n";
-		}
-		
-		
-		$dnscfg = "";
-		
-		if ($dhcpifconf['domain']) {
-			$dnscfg .= "	option domain-name \"{$dhcpifconf['domain']}\";\n";
+			$dhcpdconf .= " dhcp-option=tag:{$dhcpif},option:domain-name,{$dhcpifconf['domain']}\n";
 		}
 		
 		$dnsservers = array();
@@ -354,66 +357,40 @@ EOD;
 		
 		$dnsservers = array_filter($dnsservers, "is_ipaddr");
 		if (!empty($dnsservers))
-			$dnscfg .= "	option domain-name-servers " . join(",", $dnsservers) . ";\n";
-
-		$dhcpdconf .= "subnet $subnet netmask $subnetmask {\n";
-		$dhcpdconf .= "	pool {\n";
-		if (isset($dhcpifconf['denyunknown'])) 
-		   $dhcpdconf .= "		deny unknown clients;\n";
+			$dhcpdconf .= " dhcp-option=tag:{$dhcpif},option:dns-server," . join(",", $dnsservers) . "\n";
 		
 		if ($dhcpifconf['gateway'])
 			$routers = $dhcpifconf['gateway'];
 		else
 			$routers = $ifcfg['ipaddr'];
-		
-		$dhcpdconf .= <<<EOD
-		range {$dhcpifconf['range']['from']} {$dhcpifconf['range']['to']};
-	}
-	option routers {$routers};
-$dnscfg
 
-EOD;
-
-		if ($dhcpifconf['defaultleasetime'])
-			$dhcpdconf .= "	default-lease-time {$dhcpifconf['defaultleasetime']};\n";
-		if ($dhcpifconf['maxleasetime'])
-			$dhcpdconf .= "	max-lease-time {$dhcpifconf['maxleasetime']};\n";
-			
+		$dhcpdconf .= " dhcp-option=tag:{$dhcpif},option:router,{$routers}";
+	
 		if (is_array($dhcpifconf['winsserver']) && $dhcpifconf['winsserver'][0]) {
-			$dhcpdconf .= "	option netbios-name-servers " . join(",", $dhcpifconf['winsserver']) . ";\n";
-			$dhcpdconf .= "	option netbios-node-type 8;\n";
+			$dhcpdconf .= " dhcp-option=tag:{$dhcpif},option:netbios-ns," . join(",", $dhcpifconf['winsserver']) . "\n";
+			$dhcpdconf .= "	dhcp-option=tag:{$dhcpif},option:netbios-nodetype,8\n";
 		}
 		
 		if ($dhcpifconf['next-server'])
-			$dhcpdconf .= "	next-server {$dhcpifconf['next-server']};\n";
+			$dhcpdconf .= "	dhcp-option=tag:{$dhcpif},option:tftp-server,{$dhcpifconf['next-server']};\n";
 		if ($dhcpifconf['filename'])
-			$dhcpdconf .= "	filename \"{$dhcpifconf['filename']}\";\n";
+			$dhcpdconf .= "	dhcp-option=tag:{$dhcpif},option:boot-filename,\"{$dhcpifconf['filename']}\"\n";
 			
-		$dhcpdconf .= <<<EOD
-}
-
-EOD;
-
 		/* add static mappings */
 		if (is_array($dhcpifconf['staticmap'])) {
 		
 			$i = 0;
 			foreach ($dhcpifconf['staticmap'] as $sm) {
 				if (!is_ipaddr6($sm['ipaddr'])) {
-					$dhcpdconf .= <<<EOD
-host s_{$dhcpif}_{$i} {
-	hardware ethernet {$sm['mac']};
-
-EOD;
-					if ($sm['ipaddr'])
-						$dhcpdconf .= "	fixed-address {$sm['ipaddr']};\n";
+					$dhcpdconf .= "	dhcp-host={$sm['mac']},set:s_{$dhcpif}_{$i},{$sm['ipaddr']}";
+					if ($dhcpifconf['defaultleasetime'])
+						$dhcpdconf .= ",{$dhcpifconf['defaultleasetime']}s";
+					$dhcpdconf .= "\n";
 
 					if ($sm['next-server'])
-						$dhcpdconf .= "	next-server {$sm['next-server']};\n";
+						$dhcpdconf .= "	 dhcp-option=tag:s_{$dhcpif}_{$i},option:tftp-server,{$sm['next-server']}\n";
 					if ($sm['filename'])
-						$dhcpdconf .= "	filename \"{$sm['filename']}\";\n";
-				
-					$dhcpdconf .= "}\n";
+						$dhcpdconf .= "	 dhcp-option=tag:s_{$dhcpif}_{$i},option:boot-filename, \"{$sm['filename']}\"\n";
 					$i++;
 				}
 			}
@@ -425,12 +402,8 @@ EOD;
 	fwrite($fd, $dhcpdconf);
 	fclose($fd);
 
-	/* create an empty leases database */
-	touch("{$g['vardb_path']}/dhcpd.leases");
-	
-	/* fire up dhcpd */
-	mwexec("/usr/local/sbin/dhcpd -cf {$g['varetc_path']}/dhcpd.conf " . 
-		join(" ", $dhcpdifs));
+	/* run dnsmasq */
+	mwexec("/usr/local/sbin/dnsmasq --conf-dir={$g['varetc_path']}/dnsmasq");
 		
 	if (!$g['booting']) {
 		filter_configure();
@@ -443,8 +416,6 @@ EOD;
 function services_dhcrelay_configure() {
 	global $config, $g;
 	
-	/* kill any running dhcrelay */
-	killbypid("{$g['varrun_path']}/dhcrelay.pid");
 	
 	$dhcrelaycfg = $config['dhcrelay'];
 	
@@ -467,11 +438,26 @@ function services_dhcrelay_configure() {
 	if (!$dhcrelayenable)
 		return 0;
 	
+	/* write dhcprelay.conf */
+	if (file_exists("{$g['varetc_path']}/dnsmasq/dhcprelay.conf")) {
+		unlink("{$g['varetc_path']}/dnsmasq/dhcprelay.conf");
+	}	
+
+	$fd = fopen("{$g['varetc_path']}/dnsmasq/dhcprelay.conf", "w");
+	if (!$fd) {
+		printf("Error: cannot open dhcprelay.conf in services_dhcrelay_configure().\n");
+		return 1;
+	}
+
+	/* kill any running dnsmasq */
+	sigkillbypid("{$g['varrun_path']}/dnsmasq.pid", "TERM");
+
 	if ($g['booting'])
 		echo "Starting DHCP relay service... ";
 	else
 		sleep(1);
 	
+	$dhcprconf = "";
 	$dhcrelayifs = array();
 	foreach ($dhcrelaycfg as $dhcrelayif => $dhcrelayifconf) {
 		
@@ -481,32 +467,21 @@ function services_dhcrelay_configure() {
 			(($dhcrelayif != "lan") &&
 			(!isset($ifcfg['enable']) || !$ifcfg['if'] || $ifcfg['bridge'])))
 			continue;
-			
-		$dhcrelayifs[] = $ifcfg['if'];
-	}
 
-	/* In order for the relay to work, it needs to be active on the 
-	   interface in which the destination server sits */
-	foreach ($config['interfaces'] as $ifname) {
-		$subnet = $ifname['ipaddr'] . "/" . $ifname['subnet'];
-		if (ip_in_subnet($dhcrelaycfg['server'],$subnet)) 
-			$destif = $ifname['if'];	
+		$dhcprconf .= "dhcp-relay={$ifcfg['ipaddr']},{$dhcrelaycfg['server']}\n";
 	}
 	
 	if (!isset($destif)) 
 		$destif = $config['interfaces']['wan']['if'];
 	
 	$dhcrelayifs[] = $destif;
-	$dhcrelayifs = array_unique($dhcrelayifs);
 
-	/* fire up dhcrelay */
-	$cmd = "/usr/local/sbin/dhcrelay -i " .  join(" -i ", $dhcrelayifs);
 
-	if (isset($dhcrelaycfg['agentoption']))	
-		$cmd .=  " -a -m replace";
+	fwrite($fd, $dhcprconf);
+	fclose($fd);
 
-	$cmd .= " {$dhcrelaycfg['server']}";
-	mwexec($cmd);
+	/* run dnsmasq */
+	mwexec("/usr/local/sbin/dnsmasq --conf-dir={$g['varetc_path']}/dnsmasq");
 		
 	if (!$g['booting']) {
 		filter_configure();
@@ -626,17 +601,22 @@ function services_dnsmasq_configure() {
 		system_hosts_generate();
 		
 		/* generate dnsmasq.conf */
-		$fd = fopen("{$g['varetc_path']}/dnsmasq.conf", "w");
+		$fd = fopen("{$g['varetc_path']}/dnsmasq/dnsmasq.conf", "w");
 		if (!$fd) {
 			printf("Error: cannot open dnsmasq.conf in services_dnsmasq_configure().\n");
 			return 1;
 		}
 		$dnsmasqconf = "edns-packet-max=4096\n";
+		$dnsmasqconf .= "log-facility=local7\n";
+		$dnsmasqconf .= "except-interface=" . get_real_wan_interface() . "\n";
+		if (ipv6enabled())
+			$dnsmasqconf .= "except-interface=" . get_real_wan_interface(true) . "\n";
 		
 		if (isset($config['dnsmasq']['regdhcp'])) {
-			$dnsmasqconf .= "dhcp-leasefile={$g['vardb_path']}/dhcpd.leases\n" .
-					"domain={$config['system']['domain']}\n";
+			$dnsmasqconf .= "domain={$config['system']['domain']}\n";
+			$dnsmasqconf .= "dhcp-fqdn\n";
 		}
+
 		$dnsmasqcfg = $config['dnsmasq'];
 		if (is_array($dnsmasqcfg['hosts'])) {
 			foreach ($dnsmasqcfg['hosts'] as $host) {
@@ -683,7 +663,7 @@ function services_dnsmasq_configure() {
 		fclose($fd);
 
 		/* run dnsmasq */
-		mwexec("/usr/local/sbin/dnsmasq -C {$g['varetc_path']}/dnsmasq.conf");
+		mwexec("/usr/local/sbin/dnsmasq --conf-dir={$g['varetc_path']}/dnsmasq");
 
 		if ($g['booting'])
 			echo "done\n";
