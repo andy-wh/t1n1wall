@@ -107,7 +107,6 @@ device			ncv			# NCR 53C500
 device			nsp			# Workbit Ninja SCSI-3
 device			stg			# TMC 18C30/18C50
 device			isci			  # Intel C600 SAS controller
-options 	CAM_BOOT_DELAY=4000
 
 # RAID controllers
 device		aac				# Adaptec FSA RAID
