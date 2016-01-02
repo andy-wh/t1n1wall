@@ -235,7 +235,6 @@ function enable_change(enable_over) {
 	document.iform.dns1.disabled = endis;
 	document.iform.dns2.disabled = endis;
 	document.iform.deftime.disabled = endis;
-	document.iform.maxtime.disabled = endis;
 	document.iform.nextserver.disabled = endis;
 	document.iform.filename.disabled = endis;
 	
@@ -244,7 +243,6 @@ function enable_change(enable_over) {
 	document.iform.v6range_from.disabled = endis;
 	document.iform.v6range_to.disabled = endis;
 	document.iform.v6deftime.disabled = endis;
-	document.iform.v6maxtime.disabled = endis;
 	<?php endif; ?>
 }
 
@@ -340,16 +338,6 @@ function enable_change(enable_over) {
                           expiration time.<br>
                           The default is 7200 seconds.</td>
                       </tr>
-                      <tr> 
-                        <td width="22%" valign="top" class="vncell">Maximum lease 
-                          time</td>
-                        <td width="78%" class="vtable"> 
-                          <input name="maxtime" type="text" class="formfld" id="maxtime" size="10" value="<?=htmlspecialchars($pconfig['maxtime']);?>">
-                          seconds<br>
-                          This is the maximum lease time for clients that ask 
-                          for a specific expiration time.<br>
-                          The default is 86400 seconds.</td>
-                      </tr>
                       <tr>
                         <td width="22%" valign="top" class="vncell">Next server</td>
                         <td width="78%" class="vtable"> 
@@ -398,16 +386,6 @@ function enable_change(enable_over) {
 						  This is used for IPv6 clients that do not ask for a specific 
 						  expiration time.<br>
 						  The default is 7200 seconds.</td>
-					  </tr>
-					  <tr> 
-						<td width="22%" valign="top" class="vncell">IPv6 Maximum lease 
-						  time</td>
-						<td width="78%" class="vtable"> 
-						  <input name="v6maxtime" type="text" class="formfld" id="v6maxtime" size="10" value="<?=htmlspecialchars($pconfig['v6maxtime']);?>">
-						  seconds<br>
-						  This is the maximum lease time for IPv6 clients that ask 
-						  for a specific expiration time.<br>
-						  The default is 86400 seconds.</td>
 					  </tr>
 <?php } ?>
 					  <tr> 
