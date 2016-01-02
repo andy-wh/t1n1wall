@@ -142,7 +142,7 @@ export CC=gcc46
 	cd $PORTSDIR/net/dhcp6
         make
 	install -s $WRKDIRPREFIX/$PORTSDIR/net/dhcp6/work/wide-dhc*/dhcp6c $MW_BUILDPATH/t1n1fs/usr/local/sbin
-	# install -s $WRKDIRPREFIX/$PORTSDIR/net/dhcp6/work/wide-dhc*/dhcp6s $MW_BUILDPATH/t1n1fs/usr/local/sbin
+	install -s $WRKDIRPREFIX/$PORTSDIR/net/dhcp6/work/wide-dhc*/dhcp6s $MW_BUILDPATH/t1n1fs/usr/local/sbin
 # sixxs-aiccu		
 	cd $PORTSDIR/net/sixxs-aiccu
 	cp $MW_BUILDPATH/freebsd10/build/patches/packages/patch-aiccu-common.c files/
