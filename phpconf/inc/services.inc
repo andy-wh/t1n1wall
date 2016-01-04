@@ -364,7 +364,7 @@ EOD;
 		else
 			$routers = $ifcfg['ipaddr'];
 
-		$dhcpdconf .= " dhcp-option=tag:{$dhcpif},option:router,{$routers}";
+		$dhcpdconf .= " dhcp-option=tag:{$dhcpif},option:router,{$routers}\n";
 	
 		if (is_array($dhcpifconf['winsserver']) && $dhcpifconf['winsserver'][0]) {
 			$dhcpdconf .= " dhcp-option=tag:{$dhcpif},option:netbios-ns," . join(",", $dhcpifconf['winsserver']) . "\n";
