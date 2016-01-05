@@ -314,7 +314,7 @@ function services_dhcpd_configure() {
 	sigkillbypid("{$g['varrun_path']}/dnsmasq.pid", "TERM");
 
 	$dhcpdconf = <<<EOD
-dhcp-option=option:domain-name, "{$syscfg['domain']}";
+dhcp-option=option:domain-name, "{$syscfg['domain']}"
 dhcp-authoritative
 dhcp-leasefile=/var/db/dnsmasq.dhcpd.leases
 
