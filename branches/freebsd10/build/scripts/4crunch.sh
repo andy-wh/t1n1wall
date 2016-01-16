@@ -51,9 +51,6 @@ export CC=cc
 
 # remove files that were put in by stage 2 and are now part of crunched binary
 	rm -rf $MW_BUILDPATH/t1n1fs/usr/local/sbin/dnsmasq
-	rm -rf $MW_BUILDPATH/t1n1fs/usr/local/sbin/setkey
-	rm -rf $MW_BUILDPATH/t1n1fs/usr/local/sbin/racoon
-	rm -rf $MW_BUILDPATH/t1n1fs/usr/local/lib/libipsec.so.0
 	rm -rf $MW_BUILDPATH/t1n1fs/usr/local/bin/dudders
 	rm -rf $MW_BUILDPATH/t1n1fs/usr/local/bin/ez-ipupdate
 	rm -rf $MW_BUILDPATH/t1n1fs/sbin/modem-stats
