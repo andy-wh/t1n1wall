@@ -73,8 +73,6 @@ bin/t1n1box:usr/sbin/traceroute
 bin/t1n1box:usr/sbin/traceroute6
 # other binaries
 bin/t1n1box:usr/local/sbin/dnsmasq
-bin/t1n1box:usr/local/sbin/racoon
-bin/t1n1box:usr/local/sbin/setkey
 bin/t1n1box:usr/local/bin/dudders
 bin/t1n1box:usr/local/bin/ez-ipupdate
 bin/t1n1box:usr/local/sbin/mpd5

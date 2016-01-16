@@ -14,7 +14,6 @@ fi
 
 /usr/bin/strings $MW_BUILDPATH/t1n1fs/lib/libcrypto.so.* | grep "^OpenSSL " | grep -i freebsd > $MW_BUILDPATH/t1n1fs/etc/libcrypto.version
 /usr/bin/strings $MW_BUILDPATH/t1n1fs/usr/lib/libssl.so.* | grep "^OpenSSL " > $MW_BUILDPATH/t1n1fs/etc/libssl.version
-$MW_BUILDPATH/t1n1fs/usr/local/sbin/racoon -V | grep OpenSSL > $MW_BUILDPATH/t1n1fs/etc/racoon.version
 
 makemfsroot() {
 	PLATFORM=$1
