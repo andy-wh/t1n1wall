@@ -735,7 +735,7 @@ EOD;
 
 	foreach ($optcfg as $oc) {
 		if (!$oc['bridge'])
-			$ipfrules .= "block in family {$inetfamily} $log quick on $wanif from {$oc['sa']}/{$oc['sn']} to any\n";
+			$ipfrules .= "block in $log quick on $wanif family {$inetfamily} from {$oc['sa']}/{$oc['sn']} to any\n";
 	}
 	
 	/* allow PPTP traffic if PPTP client is enabled on WAN */
