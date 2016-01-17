@@ -333,7 +333,7 @@ EOD;
 		$subnet = gen_subnet($ifcfg['ipaddr'], $ifcfg['subnet']);
 		$subnetmask = gen_subnet_mask($ifcfg['subnet']);
 		
-		$dhcpdconf .= "dhcp-range=set:lan,{$dhcpifconf['range']['from']},{$dhcpifconf['range']['to']}";
+		$dhcpdconf .= "dhcp-range=set:{$dhcpif},{$dhcpifconf['range']['from']},{$dhcpifconf['range']['to']}";
 
 		if (isset($dhcpifconf['denyunknown'])) 
 		   $dhcpdconf .= ",static";
