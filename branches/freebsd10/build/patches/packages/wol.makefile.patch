@@ -1,0 +1,12 @@
+--- /usr/t1n1wall/build10/tmp/ports/tree/net/wol/Makefile.orig	2016-02-07 21:50:15.952487000 +0000
++++ /usr/t1n1wall/build10/tmp/ports/tree/net/wol/Makefile	2016-02-07 21:50:37.752915000 +0000
+@@ -10,9 +10,7 @@
+ MAINTAINER=	ports@FreeBSD.org
+ COMMENT=	Tool to wake up Wake-On-LAN compliant computers
+ 
+-USES=		perl5
+ GNU_CONFIGURE=	yes
+-USE_PERL5=	build
+ CPPFLAGS+=	-I${LOCALBASE}/include
+ LDFLAGS+=	-L${LOCALBASE}/lib
+ 
