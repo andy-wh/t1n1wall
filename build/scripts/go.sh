@@ -31,15 +31,15 @@ echo "Changing directory to $MW_BUILDPATH/freebsd10/build/scripts"
 cd $MW_BUILDPATH/freebsd10/build/scripts
 chmod +x *.sh
 
-echo "Updating ports to correct versions: 2013-12-20"
+echo "Updating ports to correct versions: 2016-02-01"
 
 /usr/bin/svnlite checkout --depth empty svn://svn.freebsd.org/ports/head  $MW_BUILDPATH/tmp/ports/tree
 cd $MW_BUILDPATH/tmp/ports/tree
 
-/usr/bin/svnlite update -r '{2015-03-19}' --set-depth files Templates Tools net dns security sysutils devel GIDs UIDs Keywords
-/usr/bin/svnlite update -r '{2015-03-19}' Mk net/isc-dhcp41-server/ net/isc-dhcp41-relay/ net/isc-dhcp41-client/ net/mpd5/ net/dhcp6 net/wol sysutils/xmbmon
-/usr/bin/svnlite update -r '{2015-08-19}' security/ipsec-tools devel/libtool net/openntpd
-/usr/bin/svnlite update -r '{2015-03-19}' net/sixxs-aiccu devel/gmake security/gnutls
+/usr/bin/svnlite update -r '{2016-02-01}' --set-depth files Templates Tools net dns security sysutils devel GIDs UIDs Keywords
+/usr/bin/svnlite update -r '{2016-02-01}' Mk net/isc-dhcp41-server/ net/isc-dhcp41-relay/ net/isc-dhcp41-client/ net/mpd5/ net/dhcp6 net/wol sysutils/xmbmon
+/usr/bin/svnlite update -r '{2016-02-01}' security/ipsec-tools devel/libtool net/openntpd
+/usr/bin/svnlite update -r '{2016-02-01}' net/sixxs-aiccu devel/gmake security/gnutls
 
 cd $MW_BUILDPATH/freebsd10/build/scripts
 

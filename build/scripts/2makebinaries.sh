@@ -112,20 +112,10 @@ export CC=gcc46
  	cd $PORTSDIR/net/openntpd
         make CONFIGURE_ARGS="--with-privsep-user=root --localstatedir=/var" MASTER_SITE_OVERRIDE=http://ftp.heanet.ie/mirrors/OpenBSD/OpenNTPD/
 	export CC=gcc46
-# ISC dhcp-server
-        cd $PORTSDIR/net/isc-dhcp41-server
-        cp $MW_BUILDPATH/freebsd10/build/patches/packages/isc-dhcpd/patch-server.db.c files/
-        make
-        # install -s $WRKDIRPREFIX/$PORTSDIR/net/isc-dhcp41-server/work/dhcp-*/server/dhcpd $MW_BUILDPATH/t1n1fs/usr/local/sbin/
-        rm files/patch-server.db.c
 # ISC dhcp-client
-        cd $PORTSDIR/net/isc-dhcp41-client
-        make
-        install -s $WRKDIRPREFIX/$PORTSDIR/net/isc-dhcp41-client/work/dhcp-*/client/dhclient $MW_BUILDPATH/t1n1fs/sbin/
-# ISC dhcp-relay
-        cd $PORTSDIR/net/isc-dhcp41-relay
-        make
-        # install -s $WRKDIRPREFIX/$PORTSDIR/net/isc-dhcp41-relay/work/dhcp-*/relay/dhcrelay $MW_BUILDPATH/t1n1fs/usr/local/sbin/
+	cd $PORTSDIR/net/isc-dhcp41-client
+	make
+	install -s $WRKDIRPREFIX/$PORTSDIR/net/isc-dhcp41-client/work/dhcp-*/client/dhclient $MW_BUILDPATH/t1n1fs/sbin/
 # ipsec-tools
         cd $PORTSDIR/security/ipsec-tools
         patch < $MW_BUILDPATH/freebsd10/build/patches/packages/ipsec-tools.Makefile.patch
@@ -145,18 +135,13 @@ export CC=gcc46
 	install -s $WRKDIRPREFIX/$PORTSDIR/net/dhcp6/work/wide-dhc*/dhcp6s $MW_BUILDPATH/t1n1fs/usr/local/sbin
 # sixxs-aiccu		
 	cd $PORTSDIR/net/sixxs-aiccu
-	cp $MW_BUILDPATH/freebsd10/build/patches/packages/patch-aiccu-common.c files/
-	cp -p Makefile Makefile.orig
-	patch -l < $MW_BUILDPATH/freebsd10/build/patches/packages/sixxs-aiccu.Makefile.patch
         make
 	install -s $WRKDIRPREFIX/$PORTSDIR/net/sixxs-aiccu/work/aiccu/unix-console/aiccu $MW_BUILDPATH/t1n1fs/usr/local/sbin/sixxs-aiccu
-	mv Makefile.orig Makefile
-	rm files/patch-aiccu-common.c
 # mpd5
 	cd $PORTSDIR/net/mpd5
         make
 	# remove PAM
-	cd $PORTSDIR/net/mpd5/work/mpd-5.7/src
+	cd $PORTSDIR/net/mpd5/work/mpd-5.*/src
 	make clean
 	sed -i '' -e's/^USE_AUTH_PAM/#USE_AUTH_PAM/' Makefile
 	make
@@ -167,9 +152,10 @@ export CC=gcc46
 	install -s $WRKDIRPREFIX/$PORTSDIR/sysutils/xmbmon/work/xmbmon*/mbmon $MW_BUILDPATH/t1n1fs/usr/local/bin/
 # wol
 	cd $PORTSDIR/net/wol
-	make WITHOUT=NLS
+	patch < $MW_BUILDPATH/freebsd10/build/patches/packages/wol.makefile.patch
+	make
         install -s $WRKDIRPREFIX/$PORTSDIR/net/wol/work/wol-*/src/wol $MW_BUILDPATH/t1n1fs/usr/local/bin/
-
+	mv Makefile.orig Makefile
 
 # make t1n1wall tools and binaries
         cd $MW_BUILDPATH/tmp
