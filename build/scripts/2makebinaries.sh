@@ -144,8 +144,10 @@ export CC=gcc46
 	cd $PORTSDIR/net/mpd5/work/mpd-5.*/src
 	make clean
 	sed -i '' -e's/^USE_AUTH_PAM/#USE_AUTH_PAM/' Makefile
+	patch < $MW_BUILDPATH/freebsd10/build/patches/packages/mpd5.backtrace.patch
 	make
 	install -s $WRKDIRPREFIX/$PORTSDIR/net/mpd5/work/mpd-*/src/mpd5 $MW_BUILDPATH/t1n1fs/usr/local/sbin/
+	mv Makefile.orig Makefile
 # xmbmon
 	cd $PORTSDIR/sysutils/xmbmon
         make
