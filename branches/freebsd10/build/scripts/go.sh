@@ -37,7 +37,7 @@ echo "Updating ports to correct versions: 2016-02-01"
 cd $MW_BUILDPATH/tmp/ports/tree
 
 /usr/bin/svnlite update -r '{2016-02-01}' --set-depth files Templates Tools net dns security sysutils devel GIDs UIDs Keywords
-/usr/bin/svnlite update -r '{2016-02-01}' Mk net/isc-dhcp41-server/ net/isc-dhcp41-relay/ net/isc-dhcp41-client/ net/mpd5/ net/dhcp6 net/wol sysutils/xmbmon
+/usr/bin/svnlite update -r '{2016-02-01}' Mk net/isc-dhcp41-client/ net/mpd5/ net/dhcp6 net/wol sysutils/xmbmon
 /usr/bin/svnlite update -r '{2016-02-01}' security/ipsec-tools devel/libtool net/openntpd
 /usr/bin/svnlite update -r '{2016-02-01}' net/sixxs-aiccu devel/gmake security/gnutls
 
