@@ -473,6 +473,31 @@ function convert_friendly_interface_to_real_interface_name($interface) {
    return $interface;
 }
 
+/* convert  real interface (fxp0, ng0, etc.) to friendly interface name (WAN, OPTx, etc.) */
+function convert_real_interface_to_friendly_interface_name($interface) {
+	global $config, $g;
+	/* Lan */
+	if ($interface == $config['interfaces']['lan']['if']) return "Lan";
+	/* Wan */
+	if ($interface == $config['interfaces']['wan']['if']) return "Wan";
+	/* PPTP */
+	if (substr($interface, 0, 2 ) == "ng") return "PPTP " . substr($interface, 2) ;
+	/* L2TP */
+	if (substr($interface, 0, 4 ) == "l2tp") return "L2TP " . substr($interface, 4) ;
+	/* Enc */
+	if ($interface == "enc0") return "Crypto";
+	/* Sixxs */
+	if ($interface == "tun0") return "Sixxs Ayiya";
+	if ($interface == "gif0") return "Sixxs";
+	/* loopback */
+	if (substr($interface, 0, 2 ) == "lo") return "Loopback " . substr($interface, 2) ;
+	/* OPT */
+	for ($j = 1; isset($config['interfaces']['opt' . $j]); $j++) {
+		if ($interface == $config['interfaces']['opt' . $j]['if']) return $config['interfaces']['opt' . $j]['descr'];
+	}
+	return "";
+}
+
 /* wrapper for exec() */
 function mwexec($command) {
 
