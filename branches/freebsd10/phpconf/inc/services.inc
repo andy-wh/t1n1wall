@@ -702,12 +702,25 @@ function services_snmpd_configure() {
 			" " . php_uname("m");
 		
 		$snmpdconf = <<<EOD
-sysdescr "$sysDescr"
-syslocation "{$config['snmpd']['syslocation']}"
-syscontact "{$config['snmpd']['syscontact']}"
-rocommunity "{$config['snmpd']['rocommunity']}"
+sysdescr $sysDescr
+syslocation {$config['snmpd']['syslocation']}
+syscontact {$config['snmpd']['syscontact']}
+rocommunity {$config['snmpd']['rocommunity']}
 
 EOD;
+
+		/* setup overides to make ifAlias work, find ifIndex from netstat */
+
+		exec("/usr/bin/netstat -inW -f link", $linkinfo);
+		array_shift($linkinfo);
+
+		foreach ($linkinfo as $link) {
+			$alink = preg_split("/\s+|\#|\>/", $link);
+			$ifname = chop($alink[0]);
+			$ifLink = chop($alink[3]);
+			$friendlyIfName = convert_real_interface_to_friendly_interface_name($ifname);
+			$snmpdconf .= "override ifAlias." . $ifLink . " octet_str \"" . $friendlyIfName . "\"\n";
+		}
 
 		if (isset($config['snmpd']['bindlan'])) {
 			$snmpdconf .= "agentaddress udp:161@{$config['interfaces']['lan']['ipaddr']}\n";
