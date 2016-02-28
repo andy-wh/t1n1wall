@@ -719,7 +719,7 @@ EOD;
 			$ifname = chop($alink[0]);
 			$ifLink = chop($alink[3]);
 			$friendlyIfName = convert_real_interface_to_friendly_interface_name($ifname);
-			$snmpdconf .= "override ifAlias." . $ifLink . " octet_str \"" . $friendlyIfName . "\"\n";
+			$snmpdconf .= "override iso.3.6.1.2.1.31.1.1.1.18." . $ifLink . " octet_str \"" . $friendlyIfName . "\"\n";
 		}
 
 		if (isset($config['snmpd']['bindlan'])) {
@@ -731,7 +731,7 @@ EOD;
 
 		/* run snmpd */
 		mwexec("/usr/local/sbin/snmpd -c {$g['varetc_path']}/snmpd.conf" .
-			" -P {$g['varrun_path']}/snmpd.pid");
+			" -p {$g['varrun_path']}/snmpd.pid");
 
 		if ($g['booting'])
 			echo "done\n";
