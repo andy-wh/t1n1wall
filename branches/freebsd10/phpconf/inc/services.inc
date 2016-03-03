@@ -336,7 +336,7 @@ EOD;
 		$dhcpdconf .= "dhcp-range=set:{$dhcpif},{$dhcpifconf['range']['from']},{$dhcpifconf['range']['to']}";
 
 		if (isset($dhcpifconf['denyunknown'])) 
-		   $dhcpdconf .= ",static";
+		   $dhcpdconf .= ",static," . $subnetmask;
 
 		if ($dhcpifconf['defaultleasetime'])
 			$dhcpdconf .= ",{$dhcpifconf['defaultleasetime']}s";
