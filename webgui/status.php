@@ -148,7 +148,7 @@ defStrT("unparsed ipfw rules", shaper_rules_generate());
 defCmdT("resolv.conf","cat /etc/resolv.conf");
 
 defCmdT("Processes","ps xauww");
-defCmdT("dhcpd.conf","cat /var/etc/dhcpd.conf");
+defCmdT("dnsmasq/dhcpd.conf","cat /var/etc/dnsmasq/dhcpd.conf");
 defCmdT("ez-ipupdate.cache","cat /conf/ez-ipupdate.cache");
 if (ipv6enabled())
 	defCmdT("rtadvd.conf","cat /var/etc/rtadvd.conf");
