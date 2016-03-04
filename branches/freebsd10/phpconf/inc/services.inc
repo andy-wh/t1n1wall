@@ -332,12 +332,13 @@ EOD;
 			
 		$subnet = gen_subnet($ifcfg['ipaddr'], $ifcfg['subnet']);
 		$subnetmask = gen_subnet_mask($ifcfg['subnet']);
+
+		if (isset($dhcpifconf['denyunknown']))  {
+			$dhcpdconf .= "dhcp-range=set:{$dhcpif},{$dhcpifconf['range']['from']},static";
+		} else {
+			$dhcpdconf .= "dhcp-range=set:{$dhcpif},{$dhcpifconf['range']['from']},{$dhcpifconf['range']['to']}";
+		}
 		
-		$dhcpdconf .= "dhcp-range=set:{$dhcpif},{$dhcpifconf['range']['from']},{$dhcpifconf['range']['to']}";
-
-		if (isset($dhcpifconf['denyunknown'])) 
-		   $dhcpdconf .= ",static," . $subnetmask;
-
 		if ($dhcpifconf['defaultleasetime'])
 			$dhcpdconf .= ",{$dhcpifconf['defaultleasetime']}s";
 
