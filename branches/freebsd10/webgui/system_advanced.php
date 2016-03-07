@@ -62,10 +62,10 @@ if ($_POST) {
 	
 	if ($_POST['gencert']) {
 		/* custom certificate generation requested */
-		$ck = generate_self_signed_cert("m0n0wall", $config['system']['hostname'] . "." . $config['system']['domain']);
+		$ck = generate_self_signed_cert("t1n1wall", $config['system']['hostname'] . "." . $config['system']['domain']);
 		
 		if ($ck === false) {
-			$input_errors[] = "A self-signed certificate could not be generated because the system's clock is not set.";
+			$input_errors[] = "A self-signed certificate could not be generated because there was an Error. Is the system's clock set ?";
 		} else {
 			$_POST['cert'] = $ck['cert'];
 		 	$_POST['key'] = $ck['key'];
@@ -90,7 +90,7 @@ if ($_POST) {
 	} else if ($_POST['cert'] && $_POST['key']) {
 		if (!strstr($_POST['cert'], "BEGIN CERTIFICATE") || !strstr($_POST['cert'], "END CERTIFICATE"))
 			$input_errors[] = "This certificate does not appear to be valid.";
-		if (!strstr($_POST['key'], "BEGIN RSA PRIVATE KEY") || !strstr($_POST['key'], "END RSA PRIVATE KEY"))
+		if (!strstr($_POST['key'], "BEGIN PRIVATE KEY") || !strstr($_POST['key'], "END PRIVATE KEY"))
 			$input_errors[] = "This key does not appear to be valid.";
 	}
 	if (($_POST['portrangelow'] || $_POST['portrangehigh']) &&

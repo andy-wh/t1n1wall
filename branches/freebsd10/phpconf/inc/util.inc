@@ -768,7 +768,7 @@ function generate_self_signed_cert($orgname, $cn) {
 	);
 
 	$config = array(
-		"digest_alg" => "sha1",
+		"digest_alg" => "sha256",
 		"private_key_bits" => 2048
 	);
 
@@ -780,7 +780,7 @@ function generate_self_signed_cert($orgname, $cn) {
 	openssl_pkey_export($privkey, $pkeyout);
 
 	/* sanity check */
-	if (strpos($certout, "BEGIN CERTIFICATE") !== false && strpos($pkeyout, "BEGIN RSA PRIVATE KEY") !== false)
+	if (strpos($certout, "BEGIN CERTIFICATE") !== false && strpos($pkeyout, "BEGIN PRIVATE KEY") !== false)
 		return array('cert' => $certout, 'key' => $pkeyout);
 	else
 		return false;
