@@ -33,7 +33,7 @@ export CC=gcc46
 	patch < $MW_BUILDPATH/freebsd10/build/patches/user/rtadvd.dhcppd.patch
 	# make with patched libraries or the patch above won't work
 	make obj && make CFLAGS='-I $MW_BUILDPATH/t1n1fs/tmp' 
-	# install -s /usr/obj/usr/src/usr.sbin/rtadvd/rtadvd $MW_BUILDPATH/t1n1fs/usr/sbin/
+	install -s /usr/obj/usr/src/usr.sbin/rtadvd/rtadvd $MW_BUILDPATH/t1n1fs/usr/sbin/
 	mv rtadvd.c.orig rtadvd.c
 # lets strip out any missed symbols lazy way , lots of harmless errors to dev null
 	set +e

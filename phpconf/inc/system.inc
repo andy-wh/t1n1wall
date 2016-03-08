@@ -594,6 +594,7 @@ EOD;
 		fclose($fd);
 	
 		$res = mwexec("/usr/local/sbin/mini_httpd -S -E {$g['varetc_path']}/cert.pem" .
+			" -Y IDEA-CBC-SHA:AES128-SHA:CAMELLIA128-SHA:SEED-SHA:AES128-SHA256:AES128-GCM-SHA256:CAMELLIA256-SHA:AES256-SHA256:AES256-GCM-SHA384 " .
 			" -c \"**.php|**.cgi\" -u root -maxproc 16 $portarg" .
 			" -i {$g['varrun_path']}/mini_httpd.pid");
 	} else {
