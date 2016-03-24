@@ -440,7 +440,7 @@ function typesel_change() {
 			document.iform.dstmask.disabled = 1;
 			document.iform.dstpoolid.disabled = 0;
 			break;
-		case 2:	/* network */
+		case 3:	/* network */
 			document.iform.dst.disabled = 0;
 			document.iform.dstmask.disabled = 0;
 			document.iform.dstpoolid.disabled = 1;
