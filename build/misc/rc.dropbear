@@ -1,0 +1,77 @@
+#! /usr/local/bin/php -f
+<?php
+/*
+	rc
+	part of the dropbear-ssh module (http://www.xs4all.nl/~fredmol/m0n0)
+	for m0n0wall (http://m0n0.ch/wall)
+	
+	Copyright (C) 2004 Fred Mol <fredmol@xs4all.nl>.
+	All rights reserved.
+	
+	Redistribution and use in source and binary forms, with or without
+	modification, are permitted provided that the following conditions are met:
+	
+	1. Redistributions of source code must retain the above copyright notice,
+	   this list of conditions and the following disclaimer.
+	
+	2. Redistributions in binary form must reproduce the above copyright
+	   notice, this list of conditions and the following disclaimer in the
+	   documentation and/or other materials provided with the distribution.
+	
+	THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES,
+	INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY
+	AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
+	AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY,
+	OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+	SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+	INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+	CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+	ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+	POSSIBILITY OF SUCH DAMAGE.
+*/
+	require_once("config.inc");
+	
+	$stderr = fopen("php://stderr", "w");
+	fwrite($stderr, "Initializing module dropbear-ssh...\n");
+
+	// Some tools, such as vi like to have /var/tmp.
+	symlink("/tmp", "/var/tmp");
+
+	// Login related files.
+	touch("/var/log/lastlog");
+
+	// Make the root password the same as the admin password of m0n0.
+	$fd = popen("/usr/sbin/pw usermod -n root -H 0", "w");
+	fwrite($fd, $config['system']['password']);
+	pclose($fd);
+
+	// Get dropbear host keys from /conf, if they exist. Else generated them
+	// and store them in /conf for later use.
+	$sshKeyPath = "/conf/ext/dropbear";
+	$sshKeyFile = "$sshKeyPath/keys.tgz";
+	if (file_exists($sshKeyFile)) {
+		fwrite($stderr, "Restoring dropbear host keys from $sshKeyFile...\n");
+		system("cd / && /usr/bin/tar xfz $sshKeyFile");
+	} else {
+		fwrite($stderr, "Generating dropbear host key files...\n");
+		if (!is_dir("/etc/dropbear"))
+                        mkdir("/etc/dropbear", 0755);
+		$sshConfigDir = "/etc/dropbear";
+		system("/usr/local/bin/dropbearkey -t rsa -f $sshConfigDir/dropbear_rsa_host_key");
+		system("/usr/local/bin/dropbearkey -t dss -f $sshConfigDir/dropbear_dss_host_key");
+		fwrite($stderr, "Saving dropbear host key files in $sshKeyFile...\n");
+		$tmpKeys = "/tmp/keys.tgz";
+		system("cd / && /usr/bin/tar cfz $tmpKeys $sshConfigDir/dropbear_*");
+		conf_mount_rw();
+		if (!is_dir("/conf/ext"))
+			mkdir("/conf/ext", 0755);
+		if (!is_dir("/conf/ext/dropbear"))
+			mkdir("/conf/ext/dropbear", 0755);
+		copy($tmpKeys, $sshKeyFile);
+		conf_mount_ro();
+		unlink($tmpKeys);
+	}
+	// And finally ...
+	system("/usr/local/sbin/dropbear -r /etc/dropbear/dropbear_rsa_host_key -d /etc/dropbear/dropbear_dss_host_key");
+	fwrite($stderr, "Done.\n");
+?>
