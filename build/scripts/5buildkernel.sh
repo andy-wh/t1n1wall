@@ -15,8 +15,6 @@ fi
 
 # patch kernel / sources
 		cd $MW_BUILDPATH/tmp
-#patch ipnat for fastforward as kern/72210
-		patch < $MW_BUILDPATH/freebsd10/build/patches/kernel/ip_nat_ff.kern72210.patch
 # revert checksum changes submitted as kern/203585
 		patch < $MW_BUILDPATH/freebsd10/build/patches/kernel/ip6_checksums.patch
 # apuled kern/189772
@@ -46,8 +44,6 @@ fi
 		patch < $MW_BUILDPATH/freebsd10/build/patches/kernel/mlfk_ipl.c.orig.patch
 # change order of calls to ipfw to ensure ipnat works
 		patch < $MW_BUILDPATH/freebsd10/build/patches/kernel/pfil.c.orig.patch 
-# Fix for psuedo checksum NIC's
-		patch < $MW_BUILDPATH/freebsd10/build/patches/kernel/ip_fil_freebsd.c.patch
 # Fix for using dummynet and ipnat
 		patch < $MW_BUILDPATH/freebsd10/build/patches/kernel/dummynet_with_ipnat.patch
 #
