@@ -1,11 +1,6 @@
-#machine		i386
-#cpu		I486_CPU
-#cpu		I586_CPU
-#cpu		I686_CPU
-#ident		T1N1WALL_GENERIC
+ident		T1N1WALL_GENERIC
 
 cpu             HAMMER
-ident           M0N0WALL_GENERIC64
 
 makeoptions	MODULES_OVERRIDE="dummynet glxsb aesni padlock ipfw if_tap if_vlan"
 
