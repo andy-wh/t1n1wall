@@ -78,5 +78,8 @@ fi
 # create missing etc files
 	tar -xzf $MW_BUILDPATH/freebsd10/build/files/etcadditional.tgz -C $MW_BUILDPATH/t1n1fs/
 	cp -v $MW_BUILDPATH/freebsd10/build/files/mpd-modem.script $MW_BUILDPATH/t1n1fs/etc/mpd-modem/mpd.script
+# setup pwd.db spwd.db and install passwd from master.passwd
+	/usr/sbin/pwd_mkdb -d $MW_BUILDPATH/t1n1fs/etc -p $MW_BUILDPATH/t1n1fs/etc/master.passwd # install /etc/passwd from the master.passwd file
+	/usr/sbin/pwd_mkdb -d $MW_BUILDPATH/t1n1fs/etc    $MW_BUILDPATH/t1n1fs/etc/master.passwd # install /etc/pwd.db and /etc/spwd.db
 
 echo "Finished Stage 1"
