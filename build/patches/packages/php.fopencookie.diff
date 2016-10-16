@@ -1,0 +1,26 @@
+--- main.streams.c.orig	2016-10-16 10:46:10.785630000 +0100
++++ main/streams.c	2016-10-16 10:46:35.513827000 +0100
+@@ -83,22 +83,7 @@
+ #endif
+ /* }}} */
+ 
+-/* Under BSD, emulate fopencookie using funopen */
+-#if HAVE_FUNOPEN
+-typedef struct {
+-	int (*reader)(void *, char *, int);
+-	int (*writer)(void *, const char *, int);
+-	fpos_t (*seeker)(void *, fpos_t, int);
+-	int (*closer)(void *);
+-} COOKIE_IO_FUNCTIONS_T;
+-
+-FILE *fopencookie(void *cookie, const char *mode, COOKIE_IO_FUNCTIONS_T *funcs)
+-{
+-	return funopen(cookie, funcs->reader, funcs->writer, funcs->seeker, funcs->closer);
+-}
+-# define HAVE_FOPENCOOKIE 1
+-# define PHP_STREAM_COOKIE_FUNCTIONS	&stream_cookie_functions
+-#elif HAVE_FOPENCOOKIE
++#if HAVE_FOPENCOOKIE
+ # define PHP_STREAM_COOKIE_FUNCTIONS	stream_cookie_functions
+ #endif
+ 	

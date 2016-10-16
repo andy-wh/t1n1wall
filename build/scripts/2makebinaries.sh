@@ -41,6 +41,7 @@ export CC=gcc46
         AUTOCONF_VERSION=2.13 ./buildconf --force
         ./configure --without-mysql --with-pear --with-openssl --enable-discard-path --enable-radius --enable-sockets --enable-bcmath
         patch < $MW_BUILDPATH/freebsd11/build/patches/packages/php.openssl.c.patch
+        patch < $MW_BUILDPATH/freebsd11/build/patches/packages/php.fopencookie.diff
         make
         install -s sapi/cgi/php $MW_BUILDPATH/t1n1fs/usr/local/bin/
 # mini httpd
