@@ -1,13 +1,13 @@
---- sys/dev/fxp/if_fxp.c.orig	2012-06-11 21:45:16.000000000 +0000
-+++ sys/dev/fxp/if_fxp.c	2012-06-11 21:55:38.000000000 +0000
-@@ -612,12 +612,6 @@
+--- sys/dev/fxp/if_fxp.c.orig	2016-09-29 00:24:49.000000000 +0100
++++ sys/dev/fxp/if_fxp.c	2016-10-16 13:40:00.086670000 +0100
+@@ -626,12 +626,6 @@
  		sc->flags |= FXP_FLAG_SAVE_BAD;
  	}
  
 -	/* For 82559 or later chips, Rx checksum offload is supported. */
 -	if (sc->revision >= FXP_REV_82559_A0) {
 -		/* 82559ER does not support Rx checksum offloading. */
--		if (sc->ident->devid != 0x1209)
+-		if (sc->ident->device != 0x1209)
 -			sc->flags |= FXP_FLAG_82559_RXCSUM;
 -	}
  	/*
