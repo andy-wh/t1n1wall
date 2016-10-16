@@ -1,0 +1,8 @@
+cpe:/a:net-snmp:net-snmp:5.7.3:::
+cpe:/a:openssl:openssl:1.0.1p:::
+cpe:/a:ipsec-tools:ipsec-tools:0.8.2:::
+cpe:/a:linux:ipsec_tools_racoon_daemon:0.8.2:::
+cpe:/a:isc:dhcpd:4.1:::
+cpe:/a:isc:dhcrelay:4.1:::
+cpe:/a:thekelleys:dnsmasq:2.66:::
+cpe:/a:acme:mini_httpd:1.21:::
