@@ -10,38 +10,39 @@ if ( ! -x /usr/local/bin/bash ) then
 endif
 
 # figure out if we're already running from within a repository
-set svnliteinfo=`/usr/bin/svnlite info freebsd10 >& /dev/null`
+set svnliteinfo=`/usr/bin/svnlite info freebsd11 >& /dev/null`
 if  ( $status != 1 ) then
 	echo "Found existing working copy"
 else
 	echo "No working copy found; checking out current version from repository"
-	/usr/bin/svnlite checkout https://svn.code.sf.net/p/t1n1wall/code/branches/freebsd10/
+	/usr/bin/svnlite checkout https://svn.code.sf.net/p/t1n1wall/code/branches/freebsd11/
 endif
 
-cd freebsd10
+cd freebsd11
 
 echo "Creating build directory $MW_BUILDPATH."
 mkdir -p $MW_BUILDPATH
 
-echo "Exporting repository to $MW_BUILDPATH/freebsd10."
-/usr/bin/svnlite export --force . $MW_BUILDPATH/freebsd10
-/usr/bin/svnliteversion -n . > $MW_BUILDPATH/freebsd10/svnrevision
+echo "Exporting repository to $MW_BUILDPATH/freebsd11."
+/usr/bin/svnlite export --force . $MW_BUILDPATH/freebsd11
+/usr/bin/svnliteversion -n . > $MW_BUILDPATH/freebsd11/svnrevision
 
-echo "Changing directory to $MW_BUILDPATH/freebsd10/build/scripts"
-cd $MW_BUILDPATH/freebsd10/build/scripts
+echo "Changing directory to $MW_BUILDPATH/freebsd11/build/scripts"
+cd $MW_BUILDPATH/freebsd11/build/scripts
 chmod +x *.sh
 
-echo "Updating ports to correct versions: 2016-02-01"
+echo "Updating ports to correct versions: 2016-10-16"
 
 /usr/bin/svnlite checkout --depth empty svn://svn.freebsd.org/ports/head  $MW_BUILDPATH/tmp/ports/tree
 cd $MW_BUILDPATH/tmp/ports/tree
 
-/usr/bin/svnlite update -r '{2016-02-01}' --set-depth files Templates Tools net dns security sysutils devel GIDs UIDs Keywords
-/usr/bin/svnlite update -r '{2016-02-01}' Mk net/isc-dhcp41-server net/isc-dhcp41-client/ net/mpd5/ net/dhcp6 net/wol sysutils/xmbmon
-/usr/bin/svnlite update -r '{2016-02-01}' security/ipsec-tools devel/libtool net/openntpd
-/usr/bin/svnlite update -r '{2016-02-01}' net/sixxs-aiccu devel/gmake security/gnutls
+/usr/bin/svnlite update -r '{2016-10-16}' --set-depth files Templates Tools net dns security sysutils devel GIDs UIDs Keywords
+/usr/bin/svnlite update -r '{2016-10-16}' Mk net/isc-dhcp41-server net/isc-dhcp43-client net/mpd5/ net/dhcp6 net/wol sysutils/xmbmon
+/usr/bin/svnlite update -r '{2016-10-16}' security/ipsec-tools devel/libtool net/openntpd
+/usr/bin/svnlite update -r '{2016-10-16}' net/sixxs-aiccu devel/gmake security/gnutls
+/usr/bin/svnlite update -r '{2016-02-01}' net/wol net/openntpd 
 
-cd $MW_BUILDPATH/freebsd10/build/scripts
+cd $MW_BUILDPATH/freebsd11/build/scripts
 
 echo 
 echo "----- Build environment prepared -----"

@@ -89,9 +89,9 @@ export CC=gcc46
 	install -s modem-stats $MW_BUILDPATH/t1n1fs/sbin
 # dnsmasq
         cd $MW_BUILDPATH/tmp
-        rm -Rf dnsmasq-2.75
-        tar -zxf $MW_BUILDPATH/freebsd10/build/local-sources/dnsmasq-2.75.tar.gz
-        cd dnsmasq-2.75
+        rm -Rf dnsmasq-2.76
+        tar -zxf $MW_BUILDPATH/freebsd10/build/local-sources/dnsmasq-2.76.tar.gz
+        cd dnsmasq-2.76
         cp $MW_BUILDPATH/freebsd10/build/patches/packages/patch-dnsmasq-iscreader.patch .
         # patch < patch-dnsmasq-iscreader.patch
         make COPTS+=-DNO_AUTH COPTS+=-DNO_TFTP COPTS+=-DNO_SCRIPT COPTS+=-DNO_LARGEFILE 
@@ -113,9 +113,9 @@ export CC=gcc46
         make CONFIGURE_ARGS="--with-privsep-user=root --localstatedir=/var" MASTER_SITE_OVERRIDE=http://ftp.heanet.ie/mirrors/OpenBSD/OpenNTPD/
 	export CC=gcc46
 # ISC dhcp-client
-	cd $PORTSDIR/net/isc-dhcp41-client
+	cd $PORTSDIR/net/isc-dhcp43-client
 	make
-	install -s $WRKDIRPREFIX/$PORTSDIR/net/isc-dhcp41-client/work/dhcp-*/client/dhclient $MW_BUILDPATH/t1n1fs/sbin/
+	install -s $WRKDIRPREFIX/$PORTSDIR/net/isc-dhcp43-client/work/dhcp-*/client/dhclient $MW_BUILDPATH/t1n1fs/sbin/
 # ipsec-tools
         cd $PORTSDIR/security/ipsec-tools
         patch < $MW_BUILDPATH/freebsd10/build/patches/packages/ipsec-tools.Makefile.patch
