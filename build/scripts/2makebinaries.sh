@@ -18,7 +18,7 @@ export CC=gcc46
 	mkdir -p $MW_BUILDPATH/tmp/ports/db
 	export PORT_DBDIR=$MW_BUILDPATH/tmp/ports/db
 	
-	for portoptf in $MW_BUILDPATH/freebsd10/build/files/portoptions/* ; do
+	for portoptf in $MW_BUILDPATH/freebsd11/build/files/portoptions/* ; do
 		port=${portoptf##*/}
 		mkdir -p $PORT_DBDIR/$port
 		cp $portoptf $PORT_DBDIR/$port/options
@@ -32,31 +32,31 @@ export CC=gcc46
 # php 4.4.9
 	cd $MW_BUILDPATH/tmp
 	rm -Rf php-4.4.9
-        tar -zxf $MW_BUILDPATH/freebsd10/build/local-sources/php-4.4.9.tar.bz2
+        tar -zxf $MW_BUILDPATH/freebsd11/build/local-sources/php-4.4.9.tar.bz2
         cd php-4.4.9/ext/
-	tar -zxf $MW_BUILDPATH/freebsd10/build/local-sources/radius-1.2.5.tgz
+	tar -zxf $MW_BUILDPATH/freebsd11/build/local-sources/radius-1.2.5.tgz
         mv radius-1.2.5 radius
         cd ..
 	rm configure
         AUTOCONF_VERSION=2.13 ./buildconf --force
         ./configure --without-mysql --with-pear --with-openssl --enable-discard-path --enable-radius --enable-sockets --enable-bcmath
-        patch < $MW_BUILDPATH/freebsd10/build/patches/packages/php.openssl.c.patch
+        patch < $MW_BUILDPATH/freebsd11/build/patches/packages/php.openssl.c.patch
         make
         install -s sapi/cgi/php $MW_BUILDPATH/t1n1fs/usr/local/bin/
 # mini httpd
         cd $MW_BUILDPATH/tmp
         rm -Rf mini_httpd-1.22
-        tar -zxf $MW_BUILDPATH/freebsd10/build/local-sources/mini_httpd-1.22.tar.gz
+        tar -zxf $MW_BUILDPATH/freebsd11/build/local-sources/mini_httpd-1.22.tar.gz
         cd mini_httpd-1.22/
-        patch < $MW_BUILDPATH/freebsd10/build/patches/packages/mini_httpd.patch
+        patch < $MW_BUILDPATH/freebsd11/build/patches/packages/mini_httpd.patch
         make
         install -s mini_httpd $MW_BUILDPATH/t1n1fs/usr/local/sbin
 # ezipupdate
         cd $MW_BUILDPATH/tmp
 	rm -Rf ez-ipupdate-3.0.11b8
-        tar -zxf $MW_BUILDPATH/freebsd10/build/local-sources/ez-ipupdate-3.0.11b8.tar.gz
+        tar -zxf $MW_BUILDPATH/freebsd11/build/local-sources/ez-ipupdate-3.0.11b8.tar.gz
         cd ez-ipupdate-3.0.11b8
-        patch < $MW_BUILDPATH/freebsd10/build/patches/packages/ez-ipupdate.c.patch
+        patch < $MW_BUILDPATH/freebsd11/build/patches/packages/ez-ipupdate.c.patch
         ./configure
         make
         install -s ez-ipupdate $MW_BUILDPATH/t1n1fs/usr/local/bin/
@@ -72,7 +72,7 @@ export CC=gcc46
 	else
 		cp ipfstat.c ipfstat.c.original
         fi
-        patch < $MW_BUILDPATH/freebsd10/build/patches/user/ipfstat.c.patch
+        patch < $MW_BUILDPATH/freebsd11/build/patches/user/ipfstat.c.patch
         cd /usr/src/sbin/ipf/
         make clean
 	make libipf ipfstat ipf ipfs ipmon ipnat ippool 
@@ -82,17 +82,17 @@ export CC=gcc46
 # modem-stats
 	cd $MW_BUILDPATH/tmp
 	rm -Rf modem-stats-1.0.1
-        tar -zxf $MW_BUILDPATH/freebsd10/build/local-sources/modem-stats-1.0.1.src.elf.tar.gz
+        tar -zxf $MW_BUILDPATH/freebsd11/build/local-sources/modem-stats-1.0.1.src.elf.tar.gz
 	cd modem-stats-1.0.1
-	patch < $MW_BUILDPATH/freebsd10/build/patches/user/modem-stats.c.patch
+	patch < $MW_BUILDPATH/freebsd11/build/patches/user/modem-stats.c.patch
 	make
 	install -s modem-stats $MW_BUILDPATH/t1n1fs/sbin
 # dnsmasq
         cd $MW_BUILDPATH/tmp
         rm -Rf dnsmasq-2.76
-        tar -zxf $MW_BUILDPATH/freebsd10/build/local-sources/dnsmasq-2.76.tar.gz
+        tar -zxf $MW_BUILDPATH/freebsd11/build/local-sources/dnsmasq-2.76.tar.gz
         cd dnsmasq-2.76
-        cp $MW_BUILDPATH/freebsd10/build/patches/packages/patch-dnsmasq-iscreader.patch .
+        cp $MW_BUILDPATH/freebsd11/build/patches/packages/patch-dnsmasq-iscreader.patch .
         # patch < patch-dnsmasq-iscreader.patch
         make COPTS+=-DNO_AUTH COPTS+=-DNO_TFTP COPTS+=-DNO_SCRIPT COPTS+=-DNO_LARGEFILE 
         install -s src/dnsmasq $MW_BUILDPATH/t1n1fs/usr/local/sbin
@@ -100,7 +100,7 @@ export CC=gcc46
 # dudders
         cd $MW_BUILDPATH/tmp
         rm -Rf dudders-1.04
-        tar -zxf $MW_BUILDPATH/freebsd10/build/local-sources/dudders-1.04.tar.bz2
+        tar -zxf $MW_BUILDPATH/freebsd11/build/local-sources/dudders-1.04.tar.bz2
         cd dudders-1.04
         ./configure --with-crypto=openssl
         make
@@ -118,11 +118,11 @@ export CC=gcc46
 	install -s $WRKDIRPREFIX/$PORTSDIR/net/isc-dhcp43-client/work/dhcp-*/client/dhclient $MW_BUILDPATH/t1n1fs/sbin/
 # ipsec-tools
         cd $PORTSDIR/security/ipsec-tools
-        patch < $MW_BUILDPATH/freebsd10/build/patches/packages/ipsec-tools.Makefile.patch
-        cp $MW_BUILDPATH/freebsd10/build/patches/packages/ipsec-tools.wildcard.patch $PORTSDIR/security/ipsec-tools/files
-        cp $MW_BUILDPATH/freebsd10/build/patches/packages/ipsec-tools.fqdn.patch $PORTSDIR/security/ipsec-tools/files
-        cp $MW_BUILDPATH/freebsd10/build/patches/packages/ipsec-tools.patch-zz-local-3.diff $PORTSDIR/security/ipsec-tools/files
-        cp $MW_BUILDPATH/freebsd10/build/patches/packages/ipsec-tools.kern146190_NATOa.patch $PORTSDIR/security/ipsec-tools/files        
+        patch < $MW_BUILDPATH/freebsd11/build/patches/packages/ipsec-tools.Makefile.patch
+        cp $MW_BUILDPATH/freebsd11/build/patches/packages/ipsec-tools.wildcard.patch $PORTSDIR/security/ipsec-tools/files
+        cp $MW_BUILDPATH/freebsd11/build/patches/packages/ipsec-tools.fqdn.patch $PORTSDIR/security/ipsec-tools/files
+        cp $MW_BUILDPATH/freebsd11/build/patches/packages/ipsec-tools.patch-zz-local-3.diff $PORTSDIR/security/ipsec-tools/files
+        cp $MW_BUILDPATH/freebsd11/build/patches/packages/ipsec-tools.kern146190_NATOa.patch $PORTSDIR/security/ipsec-tools/files        
         make
         install -s $WRKDIRPREFIX/$PORTSDIR/security/ipsec-tools/work/ipsec-tools-*/src/racoon/.libs/racoon $MW_BUILDPATH/t1n1fs/usr/local/sbin
         install -s $WRKDIRPREFIX/$PORTSDIR/security/ipsec-tools/work/ipsec-tools-*/src/setkey/.libs/setkey $MW_BUILDPATH/t1n1fs/usr/local/sbin
@@ -144,7 +144,7 @@ export CC=gcc46
 	cd $PORTSDIR/net/mpd5/work/mpd-5.*/src
 	make clean
 	sed -i '' -e's/^USE_AUTH_PAM/#USE_AUTH_PAM/' Makefile
-	patch < $MW_BUILDPATH/freebsd10/build/patches/packages/mpd5.backtrace.patch
+	patch < $MW_BUILDPATH/freebsd11/build/patches/packages/mpd5.backtrace.patch
 	make
 	install -s $WRKDIRPREFIX/$PORTSDIR/net/mpd5/work/mpd-*/src/mpd5 $MW_BUILDPATH/t1n1fs/usr/local/sbin/
 	mv Makefile.orig Makefile
@@ -154,14 +154,14 @@ export CC=gcc46
 	install -s $WRKDIRPREFIX/$PORTSDIR/sysutils/xmbmon/work/xmbmon*/mbmon $MW_BUILDPATH/t1n1fs/usr/local/bin/
 # wol
 	cd $PORTSDIR/net/wol
-	patch < $MW_BUILDPATH/freebsd10/build/patches/packages/wol.makefile.patch
+	patch < $MW_BUILDPATH/freebsd11/build/patches/packages/wol.makefile.patch
 	make
         install -s $WRKDIRPREFIX/$PORTSDIR/net/wol/work/wol-*/src/wol $MW_BUILDPATH/t1n1fs/usr/local/bin/
 	mv Makefile.orig Makefile
 
 # make t1n1wall tools and binaries
         cd $MW_BUILDPATH/tmp
-        cp -r $MW_BUILDPATH/freebsd10/build/tools .
+        cp -r $MW_BUILDPATH/freebsd11/build/tools .
         cd tools
         gcc -o stats.cgi stats.c
         gcc -o minicron minicron.c
@@ -186,7 +186,7 @@ export CC=gcc46
 # net-snmp
         cd $MW_BUILDPATH/tmp
         rm -Rf net-snmp-5.7.3
-        tar -zxf $MW_BUILDPATH/freebsd10/build/local-sources/net-snmp-5.7.3.tar.gz
+        tar -zxf $MW_BUILDPATH/freebsd11/build/local-sources/net-snmp-5.7.3.tar.gz
         cd net-snmp-5.7.3
         ./configure --with-sys-contact="contact" --with-sys-location="location" --without-openssl --with-default-snmp-version="2" \
         --enable-ipv6 --disable-set-support --disable-des --disable-privacy --disable-md5 --disable-debugging --enable-mini-agent --disable-testing-code \
