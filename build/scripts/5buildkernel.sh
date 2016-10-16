@@ -16,7 +16,7 @@ fi
 # patch kernel / sources
 		cd $MW_BUILDPATH/tmp
 # revert checksum changes submitted as kern/203585
-		patch < $MW_BUILDPATH/freebsd11/build/patches/kernel/ip6_checksums.patch
+		#patch < $MW_BUILDPATH/freebsd11/build/patches/kernel/ip6_checksums.patch
 # apuled kern/189772
 		mkdir apuled
 		cd apuled
@@ -51,7 +51,7 @@ fi
 # fix for noika ip120 intel nic
 		patch < $MW_BUILDPATH/freebsd11/build/patches/kernel/if_em.c.patch
 #
-		patch < $MW_BUILDPATH/freebsd11/build/patches/kernel/if_fxp.c.patch
+		#patch < $MW_BUILDPATH/freebsd11/build/patches/kernel/if_fxp.c.patch
 # glxsb crypto speed increase kern/132622
 		patch < $MW_BUILDPATH/freebsd11/build/patches/kernel/glxsb.c.orig.patch
 # ipsec patch for l2tp to work
