@@ -1,6 +1,6 @@
 #!/bin/csh 
 
-set MW_BUILDPATH=/usr/t1n1wall/build10
+set MW_BUILDPATH=/usr/t1n1wall/build11
 setenv MW_BUILDPATH $MW_BUILDPATH
 setenv MW_ARCH `uname -m`
 
