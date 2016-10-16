@@ -45,9 +45,9 @@ export CC=gcc46
         install -s sapi/cgi/php $MW_BUILDPATH/t1n1fs/usr/local/bin/
 # mini httpd
         cd $MW_BUILDPATH/tmp
-        rm -Rf mini_httpd-1.22
-        tar -zxf $MW_BUILDPATH/freebsd11/build/local-sources/mini_httpd-1.22.tar.gz
-        cd mini_httpd-1.22/
+        rm -Rf mini_httpd-1.25
+        tar -zxf $MW_BUILDPATH/freebsd11/build/local-sources/mini_httpd-1.25.tar.gz
+        cd mini_httpd-1.25/
         patch < $MW_BUILDPATH/freebsd11/build/patches/packages/mini_httpd.patch
         make
         install -s mini_httpd $MW_BUILDPATH/t1n1fs/usr/local/sbin
