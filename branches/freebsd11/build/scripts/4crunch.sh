@@ -34,7 +34,7 @@ export CC=cc
 	rm -rf crunchgen
 	mkdir crunchgen
 	cd crunchgen
-	cp $MW_BUILDPATH/freebsd10/build/minibsd/t1n1box.conf .
+	cp $MW_BUILDPATH/freebsd11/build/minibsd/t1n1box.conf .
 	export CC=gcc46
 	/usr/bin/crunchgen -f t1n1box.conf
 	/usr/bin/make -f t1n1box.mk objs exe
@@ -63,12 +63,12 @@ export CC=cc
 	rm -rf $MW_BUILDPATH/t1n1fs/usr/local/sbin/mpd5
 #
 	cd $MW_BUILDPATH/tmp
-	perl $MW_BUILDPATH/freebsd10/build/minibsd/mkmini.pl $MW_BUILDPATH/freebsd10/build/minibsd/t1n1wall.files  / $MW_BUILDPATH/t1n1fs/
-	perl $MW_BUILDPATH/freebsd10/build/minibsd/mkmini.pl $MW_BUILDPATH/freebsd10/build/minibsd/t1n1box.files  / $MW_BUILDPATH/t1n1fs/
+	perl $MW_BUILDPATH/freebsd11/build/minibsd/mkmini.pl $MW_BUILDPATH/freebsd11/build/minibsd/t1n1wall.files  / $MW_BUILDPATH/t1n1fs/
+	perl $MW_BUILDPATH/freebsd11/build/minibsd/mkmini.pl $MW_BUILDPATH/freebsd11/build/minibsd/t1n1box.files  / $MW_BUILDPATH/t1n1fs/
 
 # make libs
 	cd $MW_BUILDPATH/tmp
-	perl $MW_BUILDPATH/freebsd10/build/minibsd/mklibs.pl $MW_BUILDPATH/t1n1fs > t1n1wall.libs
-	perl $MW_BUILDPATH/freebsd10/build/minibsd/mkmini.pl t1n1wall.libs / $MW_BUILDPATH/t1n1fs
+	perl $MW_BUILDPATH/freebsd11/build/minibsd/mklibs.pl $MW_BUILDPATH/t1n1fs > t1n1wall.libs
+	perl $MW_BUILDPATH/freebsd11/build/minibsd/mkmini.pl t1n1wall.libs / $MW_BUILDPATH/t1n1fs
 
 echo "Finished Stage 4"

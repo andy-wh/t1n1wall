@@ -36,11 +36,11 @@ fi
 	mkdir -p etc/rc.d/ bin cf conf.default dev etc/mpd-modem ftmp mnt proc root sbin tmp libexec lib /var/etc/dnsmasq usr/bin usr/lib usr/libexec usr/local usr/sbin usr/share usr/local/bin usr/local/captiveportal usr/local/lib usr/local/sbin/.libs usr/local/www usr/share/misc boot/kernel
  
 # insert svn files to filesystem
-	cp -v -r $MW_BUILDPATH/freebsd10/phpconf/rc.* etc/
-	cp -v -r $MW_BUILDPATH/freebsd10/phpconf/inc etc/
-	cp -v -r $MW_BUILDPATH/freebsd10/etc/* etc
-	cp -v -r $MW_BUILDPATH/freebsd10/webgui/ usr/local/www/
-	cp -v -r $MW_BUILDPATH/freebsd10/captiveportal usr/local/
+	cp -v -r $MW_BUILDPATH/freebsd11/phpconf/rc.* etc/
+	cp -v -r $MW_BUILDPATH/freebsd11/phpconf/inc etc/
+	cp -v -r $MW_BUILDPATH/freebsd11/etc/* etc
+	cp -v -r $MW_BUILDPATH/freebsd11/webgui/ usr/local/www/
+	cp -v -r $MW_BUILDPATH/freebsd11/captiveportal usr/local/
  
 # set permissions
 	chmod -R 0755 usr/local/www/* usr/local/captiveportal/* etc/rc*
@@ -52,32 +52,32 @@ fi
 # configure build information
 	date > etc/version.buildtime
 	date +%s > etc/version.buildtime.unix
-	VERSION=`cat $MW_BUILDPATH/freebsd10/version`
+	VERSION=`cat $MW_BUILDPATH/freebsd11/version`
 
-	if [ -r $MW_BUILDPATH/freebsd10/svnrevision ]; then
+	if [ -r $MW_BUILDPATH/freebsd11/svnrevision ]; then
 		# replace character '%' in version with repository revision
-		SVNREV=`cat $MW_BUILDPATH/freebsd10/svnrevision`
+		SVNREV=`cat $MW_BUILDPATH/freebsd11/svnrevision`
 		VERSION=${VERSION/\%/$SVNREV}
 	fi
 	
 	echo $VERSION > etc/version
  
 # get and set current default configuration
-	cp -v $MW_BUILDPATH/freebsd10/phpconf/config.xml conf.default/config.xml
+	cp -v $MW_BUILDPATH/freebsd11/phpconf/config.xml conf.default/config.xml
  
 # insert termcap and zoneinfo files
 	cp -v /usr/share/misc/termcap usr/share/misc
  
 # do zoneinfo.tgz and dev fs
 	cd tmp 
-	cp -v $MW_BUILDPATH/freebsd10/build/files/zoneinfo.tgz $MW_BUILDPATH/t1n1fs/usr/share
+	cp -v $MW_BUILDPATH/freebsd11/build/files/zoneinfo.tgz $MW_BUILDPATH/t1n1fs/usr/share
 # create php.ini	
-	cp -v $MW_BUILDPATH/freebsd10/build/files/php.ini $MW_BUILDPATH/t1n1fs/usr/local/lib/php.ini
+	cp -v $MW_BUILDPATH/freebsd11/build/files/php.ini $MW_BUILDPATH/t1n1fs/usr/local/lib/php.ini
 # create login.conf
-	cp -v $MW_BUILDPATH/freebsd10/build/files/login.conf $MW_BUILDPATH/t1n1fs/etc/
+	cp -v $MW_BUILDPATH/freebsd11/build/files/login.conf $MW_BUILDPATH/t1n1fs/etc/
 # create missing etc files
-	tar -xzf $MW_BUILDPATH/freebsd10/build/files/etcadditional.tgz -C $MW_BUILDPATH/t1n1fs/
-	cp -v $MW_BUILDPATH/freebsd10/build/files/mpd-modem.script $MW_BUILDPATH/t1n1fs/etc/mpd-modem/mpd.script
+	tar -xzf $MW_BUILDPATH/freebsd11/build/files/etcadditional.tgz -C $MW_BUILDPATH/t1n1fs/
+	cp -v $MW_BUILDPATH/freebsd11/build/files/mpd-modem.script $MW_BUILDPATH/t1n1fs/etc/mpd-modem/mpd.script
 # setup pwd.db spwd.db and install passwd from master.passwd
 	/usr/sbin/pwd_mkdb -d $MW_BUILDPATH/t1n1fs/etc -p $MW_BUILDPATH/t1n1fs/etc/master.passwd # install /etc/passwd from the master.passwd file
 	/usr/sbin/pwd_mkdb -d $MW_BUILDPATH/t1n1fs/etc    $MW_BUILDPATH/t1n1fs/etc/master.passwd # install /etc/pwd.db and /etc/spwd.db
