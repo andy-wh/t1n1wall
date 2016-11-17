@@ -130,19 +130,15 @@ defCmdT("Kernel parameters", "/sbin/sysctl -a");
 defCmdT("Kernel modules loaded", "/sbin/kldstat");
 
 defCmdT("ipfw show", "/sbin/ipfw show");
-defCmdT("ipnat -lv", "/sbin/ipnat -lv");
-defCmdT("ippool -l", "/sbin/ippool -l");
-defCmdT("ippool -s", "/sbin/ippool -s");
-defCmdT("ipfstat -v", "/sbin/ipfstat -v");
-defCmdT("ipfstat -nio", "/sbin/ipfstat -nio");
-if (ipv6enabled())
-	defCmdT("ipfstat -6 -nio", "/sbin/ipfstat -6 -nio");
+defCmdT("pfctl -s nat", "/sbin/pfctl -s nat");
+defCmdT("pfctl -v -s nat", "/sbin/pfctl -v -s nat");
+defCmdT("pfctl -s info", "/sbin/pfctl -s info");
+defCmdT("pfctl -s Tables", "/sbin/pfctl -s Tables");
+defCmdT("pfctl -s rules", "/sbin/pfctl -s rules");
 
-defStrT("unparsed ipnat rules", filter_nat_rules_generate());
-defStrT("unparsed ippool definitions", filter_pools_generate());
-defStrT("unparsed ipfilter rules", filter_rules_generate());
-if (ipv6enabled())
-	defStrT("unparsed IPv6 ipfilter rules", filter_rules_generate_ipv6());
+defStrT("unparsed nat rules", filter_nat_rules_generate());
+defStrT("unparsed table definitions", filter_pools_generate());
+defStrT("unparsed pf rules", filter_rules_generate());
 defStrT("unparsed ipfw rules", shaper_rules_generate());
 
 defCmdT("resolv.conf","cat /etc/resolv.conf");

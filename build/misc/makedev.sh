@@ -32,21 +32,21 @@ if [ ! -e $MW_BUILDPATH/t1n1fs/usr/local/sbin/dropbear ]; then
 fi
 
 cp /usr/sbin/pw $MW_BUILDPATH/t1n1fs/usr/sbin
-cp $MW_BUILDPATH/freebsd10/build/misc/rc.dropbear $MW_BUILDPATH/t1n1fs/etc      
+cp $MW_BUILDPATH/freebsd11/build/misc/rc.dropbear $MW_BUILDPATH/t1n1fs/etc      
 
 if [ ! -e $MW_BUILDPATH/usr/local/bin/ksh ]; then
 	cp /usr/local/bin/ksh $MW_BUILDPATH/t1n1fs/usr/local/bin/ksh
 fi
 
-cp /usr/bin/nc $MW_BUILDPATH/us/bin/nc
-cp /usr/sbin/tcpdump $MW_BUILDPATH/usr/sbin/tcpdump
+cp /usr/bin/nc $MW_BUILDPATH/t1n1fs/usr/bin/nc
+cp /usr/sbin/tcpdump $MW_BUILDPATH/t1n1fs/usr/sbin/tcpdump
 
 ## add dtrace to kernel
-if [ ! -e $MW_BUILDPATH/freebsd10/build/kernelconfigs/T1N1WALL_GENERIC.i386.orig ]; then
-	cp $MW_BUILDPATH/freebsd10/build/kernelconfigs/T1N1WALL_GENERIC.i386 $MW_BUILDPATH/freebsd10/build/kernelconfigs/T1N1WALL_GENERIC.i386.orig
+if [ ! -e $MW_BUILDPATH/freebsd11/build/kernelconfigs/T1N1WALL_GENERIC.i386.orig ]; then
+	cp $MW_BUILDPATH/freebsd11/build/kernelconfigs/T1N1WALL_GENERIC.i386 $MW_BUILDPATH/freebsd11/build/kernelconfigs/T1N1WALL_GENERIC.i386.orig
 fi
 
-cp $MW_BUILDPATH/freebsd10/build/kernelconfigs/T1N1WALL_GENERIC.i386.orig $MW_BUILDPATH/freebsd10/build/kernelconfigs/T1N1WALL_GENERIC.i386
+cp $MW_BUILDPATH/freebsd11/build/kernelconfigs/T1N1WALL_GENERIC.i386.orig $MW_BUILDPATH/freebsd11/build/kernelconfigs/T1N1WALL_GENERIC.i386
  
 echo "
 options         KDTRACE_HOOKS
@@ -58,7 +58,7 @@ options         NFSD                    # New Network Filesystem Server
 options         NFSLOCKD                # Network Lock Manager
 options         NFS_ROOT                # NFS usable as /, requires NFSCL
 
-" >> $MW_BUILDPATH/freebsd10/build/kernelconfigs/T1N1WALL_GENERIC.i386 
+" >> $MW_BUILDPATH/freebsd11/build/kernelconfigs/T1N1WALL_GENERIC.i386 
 
 ## install dtrace
 
@@ -77,5 +77,5 @@ cp /boot/kernel/profile.ko $MW_BUILDPATHt1n1fs/boot/kernel/
 
 # make libs
         cd $MW_BUILDPATH/tmp
-        perl $MW_BUILDPATH/freebsd10/build/minibsd/mklibs.pl $MW_BUILDPATH/t1n1fs > t1n1wall.libs
-        perl $MW_BUILDPATH/freebsd10/build/minibsd/mkmini.pl t1n1wall.libs / $MW_BUILDPATH/t1n1fs
+        perl $MW_BUILDPATH/freebsd11/build/minibsd/mklibs.pl $MW_BUILDPATH/t1n1fs > t1n1wall.libs
+        perl $MW_BUILDPATH/freebsd11/build/minibsd/mkmini.pl t1n1wall.libs / $MW_BUILDPATH/t1n1fs

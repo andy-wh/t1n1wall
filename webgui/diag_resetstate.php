@@ -35,10 +35,6 @@ require("guiconfig.inc");
 if ($_POST) {
 
 	$savemsg = "";
-	if ($_POST['nattable']) {
-		filter_flush_nat_table();
-		$savemsg = "The NAT table has been flushed successfully.";
-	}
 	if ($_POST['statetable']) {
 		filter_flush_state_table();
 		if (ipv6enabled())
@@ -57,8 +53,6 @@ if ($_POST) {
                 <tr> 
                   <td width="22%" valign="top" class="vtable">&nbsp;</td>
                   <td width="78%" class="vtable">
-                      <input name="nattable" type="checkbox" id="nattable" value="yes" checked>
-                      <strong>NAT table</strong><br>
                       <input name="statetable" type="checkbox" id="statetable" value="yes" checked>
                       <strong>Firewall state table</strong><br>
                       <span class="vexpl"><br>

@@ -1314,7 +1314,7 @@ EOD;
 	/* sort list alphabetically to get some consistency */
 	$ifnames = array_keys($iflist);
 	sort($ifnames);
-	
+
 	/* assign first interface to LAN, second to WAN and any further interfaces to OPT */
 	$config['interfaces']['lan']['if'] = $ifnames[0];
 	$config['interfaces']['wan']['if'] = $ifnames[1];
