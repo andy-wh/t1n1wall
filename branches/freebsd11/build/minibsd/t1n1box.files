@@ -78,11 +78,7 @@ bin/t1n1box:usr/local/bin/ez-ipupdate
 bin/t1n1box:usr/local/sbin/mpd5
 bin/t1n1box:sbin/modem-stats
 
-# ipf userland tools
-bin/t1n1box:sbin/ipf
-bin/t1n1box:sbin/ipfs
-bin/t1n1box:sbin/ipmon
-bin/t1n1box:sbin/ipnat
-bin/t1n1box:sbin/ippool
-bin/t1n1box:sbin/ipfstat
+# pf userland tools
+bin/t1n1box:sbin/pfctl
+bin/t1n1box:sbin/pflogd
 

@@ -15,8 +15,6 @@ fi
 
 # patch kernel / sources
 		cd $MW_BUILDPATH/tmp
-# revert checksum changes submitted as kern/203585, these break ip6 checksums in ipfilter
-		patch < $MW_BUILDPATH/freebsd11/build/patches/kernel/ip6_checksums.patch
 # apuled kern/189772
 		mkdir apuled
 		cd apuled
@@ -42,8 +40,6 @@ fi
 		patch < $MW_BUILDPATH/freebsd11/build/patches/kernel/mlfk_ipl.c.orig.patch
 # change order of calls to ipfw to ensure ipnat works
 		patch < $MW_BUILDPATH/freebsd11/build/patches/kernel/pfil.c.orig.patch 
-# Fix for using dummynet and ipnat
-		patch < $MW_BUILDPATH/freebsd11/build/patches/kernel/dummynet_with_ipnat.patch
 #
 		patch < $MW_BUILDPATH/freebsd11/build/patches/kernel/vm_machdep.c.patch
 # fix for noika ip120 intel nic

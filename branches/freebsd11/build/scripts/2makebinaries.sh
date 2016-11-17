@@ -61,25 +61,6 @@ export CC=gcc46
         ./configure
         make
         install -s ez-ipupdate $MW_BUILDPATH/t1n1fs/usr/local/bin/
-# ipfilter userland tools
-        export CC=cc
-        cd /sbin
-        cp ipf ipfs ipmon ipnat ippool $MW_BUILDPATH/t1n1fs/sbin
-        cd /usr/src/contrib/ipfilter/tools/
-        #leaves patched ipfstat.c in place for crunchgen
-	if [ -a ipfstat.c.original ]
-                then
-                cp ipfstat.c.original ipfstat.c
-	else
-		cp ipfstat.c ipfstat.c.original
-        fi
-        patch < $MW_BUILDPATH/freebsd11/build/patches/user/ipfstat.c.patch
-        cd /usr/src/sbin/ipf/
-        make clean
-	make libipf ipfstat ipf ipfs ipmon ipnat ippool 
-        cp /usr/src/sbin/ipf/ipfstat/ipfstat $MW_BUILDPATH/t1n1fs/sbin
-        cd /usr/src/contrib/ipfilter/tools/
-	export CC=gcc46
 # modem-stats
 	cd $MW_BUILDPATH/tmp
 	rm -Rf modem-stats-1.0.1
