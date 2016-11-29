@@ -27,6 +27,8 @@ fi
 		echo "dev/apuled/apuled.c             optional apuled" >> $MW_BUILDPATH/tmp/sys/conf/files.amd64
 		cd $MW_BUILDPATH/tmp
 		rm -rf apuled
+#  pflog patch to make subrulenr correct
+		patch < $MW_BUILDPATH/freebsd11/build/patches/kernel/if_pflog.c.patch
 #  6RD support
 #		patch -p0 < $MW_BUILDPATH/freebsd11/build/patches/kernel/stf_6rd_20100923-1.diff , 6RD not used yet
 		patch < $MW_BUILDPATH/freebsd11/build/patches/kernel/Makefile.orig.patch

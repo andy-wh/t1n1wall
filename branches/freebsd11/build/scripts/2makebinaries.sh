@@ -152,6 +152,7 @@ export CC=gcc46
         gcc -o dnswatch dnswatch.c
         gcc -o voucher -lcrypto voucher.c
         gcc -o croen croen.c
+        gcc -o pfmon -lpcap pfmon.c
 	cc -pthread -o ledindicator  ledindicator.c 
         install -s choparp $MW_BUILDPATH/t1n1fs/usr/local/sbin
         install -s stats.cgi $MW_BUILDPATH/t1n1fs/usr/local/www
@@ -160,7 +161,8 @@ export CC=gcc46
         install -s dnswatch $MW_BUILDPATH/t1n1fs/usr/local/bin
         install -s voucher $MW_BUILDPATH/t1n1fs/usr/local/bin
         install -s croen $MW_BUILDPATH/t1n1fs/usr/local/bin
-	install -s ledindicator $MW_BUILDPATH/t1n1fs/usr/local/sbin
+        install -s ledindicator $MW_BUILDPATH/t1n1fs/sbin
+        install -s pfmon $MW_BUILDPATH/t1n1fs/sbin
         install ppp-linkup vpn-linkdown vpn-linkup $MW_BUILDPATH/t1n1fs/usr/local/sbin
 
 # select Autoconf version 2.62

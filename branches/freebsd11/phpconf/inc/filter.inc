@@ -38,10 +38,10 @@ function filter_resync() {
 //	mwexec("/sbin/ipf -6 -y");
 }
 
-function filter_ipmon_start() {
+function filter_pfmon_start() {
 	global $config, $g;
 	
-	// mwexec("/sbin/ipmon -sD");
+	mwexec("/sbin/pfmon pflog0 {$g['varrun_path']}/pfmon.pid");
 }
 
 function filter_configure($ipv4only = false) {
@@ -107,7 +107,7 @@ function filter_configure($ipv4only = false) {
 		filter_configure6();
 	
 	if ($g['booting']) {
-		mwexec("/sbin/pfctl -e -f /etc/pf.default.conf");	
+		mwexec("/sbin/pfctl -e");	
 		echo "done\n";
 	}
 	unlock_file("{$g['varrun_path']}/filter.lock");	

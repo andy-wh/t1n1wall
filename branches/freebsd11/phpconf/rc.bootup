@@ -105,8 +105,8 @@
 	/* resync ipfilter */
 	filter_resync();
 	
-	/* start ipmon */
-	filter_ipmon_start();
+	/* start pfmon */
+	filter_pfmon_start();
 	
 	/* set up static routes */
 	system_routing_configure();
