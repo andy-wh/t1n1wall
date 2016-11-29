@@ -1,0 +1,11 @@
+--- sys/netpfil/pf/if_pflog.c.orig	2016-11-25 21:26:43.833797000 +0000
++++ sys/netpfil/pf/if_pflog.c	2016-11-25 21:27:26.312664000 +0000
+@@ -221,7 +221,7 @@
+ 
+ 	if (am == NULL) {
+ 		hdr.rulenr = htonl(rm->nr);
+-		hdr.subrulenr =  1;
++		hdr.subrulenr =  -1;
+ 	} else {
+ 		hdr.rulenr = htonl(am->nr);
+ 		hdr.subrulenr = htonl(rm->nr);
