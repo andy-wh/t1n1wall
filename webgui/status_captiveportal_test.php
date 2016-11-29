@@ -40,10 +40,10 @@ if ($_POST) {
         echo "<p><table border=\"0\" cellspacing=\"0\" cellpadding=\"4\" width=\"100%\">\n";
         foreach ($test_results as $result) {
             if (strpos($result, " good ") || strpos($result, " granted ")) {
-                echo "<tr><td bgcolor=\"#D9DEE8\"><img src=\"/pass.gif\"></td>";
+                echo "<tr><td bgcolor=\"#D9DEE8\"><img src=\"/img/pass.png\"></td>";
                 echo "<td bgcolor=\"#D9DEE8\">$result</td></tr>";
             } else {
-                echo "<tr><td bgcolor=\"#FFD9D1\"><img src=\"/block.gif\"></td>";
+                echo "<tr><td bgcolor=\"#FFD9D1\"><img src=\"/img/block.png\"></td>";
                 echo "<td bgcolor=\"#FFD9D1\">$result</td></tr>";
             }
         }

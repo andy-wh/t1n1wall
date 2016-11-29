@@ -127,7 +127,7 @@ foreach ($spd as $sp): ?>
 		<td class="listt"><input type="checkbox" name="entries[]" value="<?=$args;?>" style="margin: 0 5px 0 0; padding: 0; width: 15px; height: 15px;"></td>
 		<td class="listlr" valign="top"><?=htmlspecialchars($sp['src']);?></td>
 		<td class="listr" valign="top"><?=htmlspecialchars($sp['dst']);?></td>
-		<td class="listr" valign="top"><img src="<?=$sp['dir'];?>.png" width="11" height="11" style="margin-top: 2px"></td>
+		<td class="listr" valign="top"><img src="/img/<?=$sp['dir'];?>.png" width="11" height="11" style="margin-top: 2px"></td>
 		<td class="listr" valign="top"><?=htmlspecialchars(strtoupper($sp['proto']));?></td>
 		<td class="listr" valign="top"><?=htmlspecialchars($sp['ep_src']);?> - <br>
 			<?=htmlspecialchars($sp['ep_dst']);?></td>
@@ -141,20 +141,20 @@ foreach ($spd as $sp): ?>
 	 </tr> 
 	 <tr> 
 	   <td class="list" colspan="6"></td>
-	   <td class="list"><input name="del" type="image" src="x.png" width="17" height="17" title="delete selected SPs" alt="delete selected SPs" onclick="return confirm('Do you really want to delete the selected security policies?')"></td>
+	   <td class="list"><input name="del" type="image" src="/img/x.png" width="17" height="17" title="delete selected SPs" alt="delete selected SPs" onclick="return confirm('Do you really want to delete the selected security policies?')"></td>
 	 </tr>
 </table>
 <br>
 <table border="0" cellspacing="0" cellpadding="0" summary="inout content pane">
   <tr> 
-	<td width="16"><img src="in.png" width="11" height="11" alt=""></td>
+	<td width="16"><img src="/img/in.png" width="11" height="11" alt=""></td>
 	<td>incoming (as seen by firewall)</td>
   </tr>
   <tr> 
 	<td colspan="5" height="4"></td>
   </tr>
   <tr> 
-	<td><img src="out.png" width="11" height="11" alt=""></td>
+	<td><img src="/img/out.png" width="11" height="11" alt=""></td>
 	<td>outgoing (as seen by firewall)</td>
   </tr>
 </table>

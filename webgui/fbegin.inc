@@ -68,10 +68,10 @@ function dynamic_menu(&$menu, $menu_title) {
 			else { 
 				if (!isset($header_displayed)) {
 					if (isset($config['system']['webgui']['expanddiags']) || strstr($_SERVER['SCRIPT_FILENAME'], "diag_") || strstr($_SERVER['SCRIPT_FILENAME'], "reboot") || strstr($_SERVER['SCRIPT_FILENAME'], "status_graph_cpu")): ?>
-					<a href="javascript:showhide('diag','tri_diag')"><img src="/tri_o.gif" id="tri_diag" width="14" height="10" border="0" alt=""></a><strong><a href="javascript:showhide('diag','tri_diag')" class="navlnk">Diagnostics</a></strong><br>
+					<a href="javascript:showhide('diag','tri_diag')"><img src="/img/expand_less.png" id="tri_diag" width="14" height="10" border="0" alt=""></a><strong><a href="javascript:showhide('diag','tri_diag')" class="navlnk">Diagnostics</a></strong><br>
 					<span id="diag">
 					<?php else: ?>
-					<a href="javascript:showhide('diag','tri_diag')"><img src="/tri_c.gif" id="tri_diag" width="14" height="10" border="0" alt=""></a><strong><a href="javascript:showhide('diag','tri_diag')" class="navlnk">Diagnostics</a></strong><br>
+					<a href="javascript:showhide('diag','tri_diag')"><img src="/img/expand_more.png" id="tri_diag" width="14" height="10" border="0" alt=""></a><strong><a href="javascript:showhide('diag','tri_diag')" class="navlnk">Diagnostics</a></strong><br>
 					<span id="diag" style="display: none">
 					<?php endif;
 					$header_displayed = true;			  
@@ -229,8 +229,8 @@ function preload() {
 	if (document.images) {
 		tri_open = new Image(14,10);
 		tri_closed = new Image(14,10);
-		tri_open.src = "/tri_o.gif";
-		tri_closed.src = "/tri_c.gif";
+		tri_open.src = "/img/expand_less.png";
+		tri_closed.src = "/img/expand_more.png";
 	}
 }
 
@@ -239,17 +239,17 @@ function showhide(tspan, tri) {
 	triel = document.getElementById(tri);
 	if (tspanel.style.display == 'none') {
 		tspanel.style.display = '';
-		triel.src = "/tri_o.gif";
+		triel.src = "/img/expand_less.png";
 	} else {
 		tspanel.style.display = 'none';
-		triel.src = "/tri_c.gif";
+		triel.src = "/img/expand_more.png";
 	}
 }
 -->
 </script>
 <table width="750" border="0" cellspacing="0" cellpadding="2" summary="outer first pane">
   <tr valign="bottom"> 
-    <td width="150" height="65" align="center" valign="middle"> <strong><a href="http://t1n1wall.com" target="_blank"><img src="/logo.png" width="150" height="47" border="0" alt=""></a></strong></td>
+    <td width="150" height="65" align="center" valign="middle"> <strong><a href="http://t1n1wall.com" target="_blank"><img src="/img/logo.png" width="150" height="47" border="0" alt=""></a></strong></td>
     <td height="65" bgcolor="#228b22">
 	<table border="0" cellspacing="0" cellpadding="0" width="100%" summary="header pane">
 	<tr><td align="left" valign="bottom"><span class="tfrtitle">&nbsp;webGUI 

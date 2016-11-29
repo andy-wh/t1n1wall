@@ -63,7 +63,7 @@ include("fbegin.inc");
                 <td height="10" colspan="2">&nbsp;</td>
               </tr>
               <tr align="center" valign="top">
-                <td height="170" colspan="2"><img src="logo.png" width="520" height="149" alt=""></td>
+                <td height="170" colspan="2"><img src="/img/logo.png" width="520" height="149" alt=""></td>
               </tr>
               <tr>
                 <td colspan="2" class="listtopic">System information</td>
