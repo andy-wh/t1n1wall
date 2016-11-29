@@ -126,7 +126,7 @@ function get_wireless_info($wlan, $i) {
                       <td class="listlr" nowrap>
                         <?php if (!$ss['ssid']) echo "<span class=\"gray\">(hidden)</span>"; else echo htmlspecialchars($ss['ssid']);?>
                         <?php if (strpos($ss['caps'][0], "E") !== false): ?>
-                        <img src="lock.gif" width="7" height="9" alt="">
+                        <img src="/img/lock.gif" width="7" height="9" alt="">
                         <?php endif; ?>
                       </td>
                       <td class="listr"> 

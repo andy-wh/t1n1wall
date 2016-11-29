@@ -163,7 +163,7 @@ if ($_POST) {
 	  <td width="22%" valign="top" class="vncell">Expiration date</td>
 	  <td width="78%" class="vtable"> 
 		<input name="expirationdate" type="text" class="formfld" id="expirationdate" size="10" value="<?=htmlspecialchars($pconfig['expirationdate']);?>">
-		<a href="javascript:NewCal('expirationdate','mmddyyyy')"><img src="cal.gif" width="16" height="16" border="0" alt="Pick a date"></a> 
+		<a href="javascript:NewCal('expirationdate','mmddyyyy')"><img src="/img/cal.png" width="16" height="16" border="0" alt="Pick a date"></a> 
 		<br> 
 		<span class="vexpl">Leave blank if the account shouldn't expire, otherwise enter the expiration date in the following format: mm/dd/yyyy</span></td>
 	</tr>

@@ -117,13 +117,13 @@ if ($_POST) {
                   <td class="listbg">
                     <?=htmlspecialchars($route['descr']);?>&nbsp;
                   </td>
-                  <td valign="middle" nowrap class="list"> <a href="system_routes_edit.php?id=<?=$i;?><?=$typelink?>"><img src="e.png" title="edit route" width="17" height="17" border="0" alt="edit route"></a>
-                     &nbsp;<input name="del_<?=$i;?>" type="image" src="x.png" width="17" height="17" title="delete route" alt="delete route" onclick="return confirm('Do you really want to delete this route?')"></td>
+                  <td valign="middle" nowrap class="list"> <a href="system_routes_edit.php?id=<?=$i;?><?=$typelink?>"><img src="/img/e.png" title="edit route" width="17" height="17" border="0" alt="edit route"></a>
+                     &nbsp;<input name="del_<?=$i;?>" type="image" src="/img/x.png" width="17" height="17" title="delete route" alt="delete route" onclick="return confirm('Do you really want to delete this route?')"></td>
 				</tr>
 			  <?php $i++; endforeach; ?>
                 <tr> 
                   <td class="list" colspan="4"></td>
-                  <td class="list"> <a href="system_routes_edit.php?<?=$typelink?>"><img src="plus.png" title="add route" width="17" height="17" border="0" alt="add route"></a></td>
+                  <td class="list"> <a href="system_routes_edit.php?<?=$typelink?>"><img src="/img/plus.png" title="add route" width="17" height="17" border="0" alt="add route"></a></td>
 				</tr>
               </table>
             </form>

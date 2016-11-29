@@ -175,7 +175,7 @@ function getHostName($mac,$ip)
   </tr> 
   <tr> 
     <td class="list" colspan="5"></td>
-    <td class="list"><input name="del" type="image" src="x.png" width="17" height="17" title="delete selected ARP entries (or all if none selected)" alt="delete selected ARP entries (or all if none selected)"></td>
+    <td class="list"><input name="del" type="image" "src="/img/x.png"" width="17" height="17" title="delete selected ARP entries (or all if none selected)" alt="delete selected ARP entries (or all if none selected)"></td>
   </tr>
   <tr>
     <td colspan="4">

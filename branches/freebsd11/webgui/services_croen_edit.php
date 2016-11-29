@@ -515,7 +515,7 @@
 		if ($last_id != -1) {
 			echo '
 							<td class="listr">
-								<input type="image" name="del_job['.$last_id.'][]" src="x.png" title="delete job" width="17" height="17" border="0" alt="delete job">
+								<input type="image" name="del_job['.$last_id.'][]" src="/img/x.png" title="delete job" width="17" height="17" border="0" alt="delete job">
 							</td>
 						</tr>';
 		}
@@ -526,7 +526,7 @@
 	}
 	echo '
 							<td class="listr" style="border-bottom:1px solid #999999;">
-								<input type="image" name="add_job[]" src="plus.png" title="add job" width="17" height="17" border="0" alt="add job">
+								<input type="image" name="add_job[]" src="/img/plus.png" title="add job" width="17" height="17" border="0" alt="add job">
 							</td>
 						</tr>
 					</table>
@@ -573,7 +573,7 @@
 							<td width="22%" valign="top" class="vncellreq">Date</td>
 							<td width="78%" class="vtable">
 								<input name="date" type="text" class="formfld" id="oncedate" size="10" value="'.htmlspecialchars($pconfig['date']).'">
-								<a href="javascript:NewCal(\'oncedate\',\'mmddyyyy\')"><img src="cal.gif" width="16" height="16" border="0" alt="Pick a date"></a><br>
+								<a href="javascript:NewCal(\'oncedate\',\'mmddyyyy\')"><img src="/img/cal.png" width="16" height="16" border="0" alt="Pick a date"></a><br>
 								<span class="vexpl">At what date should the job be executed?<br>
 								Enter the date in the following format: mm/dd/yyyy</span>
 							</td>

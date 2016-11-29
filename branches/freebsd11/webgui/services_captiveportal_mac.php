@@ -109,13 +109,13 @@ if ($_POST) {
 	  <td class="listbg">
 		<?=htmlspecialchars($mac['descr']);?>&nbsp;
 	  </td>
-	  <td valign="middle" nowrap class="list"> <a href="services_captiveportal_mac_edit.php?id=<?=$i;?>"><img src="e.png" title="edit host" width="17" height="17" border="0" alt="edit host"></a>
-		 &nbsp;<input name="del_<?=$i;?>" type="image" src="x.png" width="17" height="17" title="delete host" alt="delete host" onclick="return confirm('Do you really want to delete this host?')"></td>
+	  <td valign="middle" nowrap class="list"> <a href="services_captiveportal_mac_edit.php?id=<?=$i;?>"><img src="/img/e.png" title="edit host" width="17" height="17" border="0" alt="edit host"></a>
+		 &nbsp;<input name="del_<?=$i;?>" type="image" src="/img/x.png" width="17" height="17" title="delete host" alt="delete host" onclick="return confirm('Do you really want to delete this host?')"></td>
 	</tr>
   <?php $i++; endforeach; ?>
 	<tr> 
 	  <td class="list" colspan="2">&nbsp;</td>
-	  <td class="list"> <a href="services_captiveportal_mac_edit.php"><img src="plus.png" title="add host" width="17" height="17" border="0" alt="add host"></a></td>
+	  <td class="list"> <a href="services_captiveportal_mac_edit.php"><img src="/img/plus.png" title="add host" width="17" height="17" border="0" alt="add host"></a></td>
 	</tr>
 	<tr>
 	<td colspan="2" class="list"><span class="vexpl"><span class="red"><strong>

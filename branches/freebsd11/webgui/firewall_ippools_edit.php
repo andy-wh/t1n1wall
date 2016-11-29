@@ -163,13 +163,13 @@ if ($_POST) {
                   <td class="listbg">
                     <?=htmlspecialchars($member['descr']);?>&nbsp;
                   </td>
-                  <td valign="middle" nowrap class="list"> <a href="firewall_ippools_member_edit.php?id=<?=$i;?>&amp;poolid=<?=htmlspecialchars($pconfig['poolid']);?>"><img src="e.png" title="edit member" width="17" height="17" border="0" alt="edit mapping"></a>
-                     &nbsp;<input name="del_<?=$i;?>" type="image" src="x.png" width="17" height="17" title="delete member" alt="delete member" onclick="return confirm('Do you really want to delete this pool member ?')"></td>
+                  <td valign="middle" nowrap class="list"> <a href="firewall_ippools_member_edit.php?id=<?=$i;?>&amp;poolid=<?=htmlspecialchars($pconfig['poolid']);?>"><img src="/img/e.png" title="edit member" width="17" height="17" border="0" alt="edit mapping"></a>
+                     &nbsp;<input name="del_<?=$i;?>" type="image" src="/img/x.png" width="17" height="17" title="delete member" alt="delete member" onclick="return confirm('Do you really want to delete this pool member ?')"></td>
 				</tr>
 			  <?php $i++; endforeach; ?>
                 <tr> 
                   <td class="list" colspan="2"></td>
-                  <td class="list"> <a href="firewall_ippools_member_edit.php?poolid=<?=htmlspecialchars($pconfig['poolid']);?>"><img src="plus.png" title="add member" width="17" height="17" border="0" alt="add mapping"></a></td>
+                  <td class="list"> <a href="firewall_ippools_member_edit.php?poolid=<?=htmlspecialchars($pconfig['poolid']);?>"><img src="/img/plus.png" title="add member" width="17" height="17" border="0" alt="add mapping"></a></td>
 				</tr>
               </table>
               <?php } ?>
