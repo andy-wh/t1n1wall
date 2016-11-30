@@ -34,7 +34,5 @@
 	require_once("functions.inc");
 
 		passthru("/sbin/pfctl -d");
-		echo "\nPress ENTER to continue.\n";
 
-	}
 ?>

@@ -1101,8 +1101,6 @@ EOD;
 				$line .= "on enc0 ";
 			else if ($isl2tp)
 				$line .= "on l2tp$iif ";
-			else
-				$line .= "on {$oc['if']} ";
 			
 			$line .= "$inetfamily ";
 
