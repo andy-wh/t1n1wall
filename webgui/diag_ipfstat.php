@@ -88,12 +88,9 @@ if (($_GET['sfilter']) or ($_GET['dfilter'])) {
 	
 }
 
-if ($_GET['ip']=='6') {
-	$fd = popen("/sbin/ipfstat -t -6" . $filter, "r");
-	$filterPassThru .= "&ip=6";
-} else {
-	$fd = popen("/sbin/ipfstat -t " . $filter, "r");
-}
+
+	$fd = popen("/sbin/pfctl -v -s states " , "r");
+
 
 // See if the user has set a limit to the number of entries...  
 if (isset($config['diag']['ipfstatentries']))
@@ -106,39 +103,29 @@ while (!feof($fd)) {
 	$line = trim(fgets($fd));
 	if (!$line)
 		continue;
+	if (strstr($line, "ALTQ"))
+		continue;
+
+	$splitline1 = preg_split('/\s+/',$line);
+	$line2 = trim(fgets($fd));
+	// tcp shows the second line as tcp data , liek sequenc numbers and wscale, so skip it
+	if (strstr($line2,"[")) $line2 = trim(fgets($fd));
+	$splitline2 = preg_split('/\s+/',$line2);
 	
-//Source IP             Destination IP         ST   PR   #pkts    #bytes       ttl
-//68.16.26.144,1633     167.219.90.224,443    4/4  tcp  366724 370351656   2:30:00
-//      0                        1              2   3      4       5          6
-	$split = explode("\t", trim($line));				
-	$srcTmp = $split[0];
+			
+	$srcTmp = $splitline1[4];
 	$data[$count]['srcip'] = stripPort($srcTmp);
 	$data[$count]['srcport'] = stripPort($srcTmp,true);
-	$dstTmp = $split[1];
+	$dstTmp = $splitline1[2];
 	$data[$count]['dstip'] = stripPort($dstTmp);
 	$data[$count]['dstport'] = stripPort($dstTmp,true);
-	$data[$count]['protocol'] = $split[3];
-	$data[$count]['packets'] = $split[4];
-	$data[$count]['bytes'] = $split[5];
-	$timeTmp = trim($split[6]);
+	$data[$count]['protocol'] = $splitline1[1];
+	$data[$count]['packets'] = $splitline2[5];
+	$data[$count]['bytes'] = $splitline2[7];
+	$timeTmp = trim($splitline2[4]);
 	$timeLen = strlen($timeTmp);
-	switch ($timeLen) {
-	case 4: 
-		$data[$count]['ttl'] = strtotime("0:0".$timeTmp);
-		break;
-	case 5: 
-		$data[$count]['ttl'] = strtotime("0:".$timeTmp);
-		break;
-	case 7: 
-		$data[$count]['ttl'] = strtotime($timeTmp);
-		break;
-	default :
-	// Debug logic, in case there is an unforseen issue
-		/*echo $line . "<br>";
-		echo $linelimit . "<br>";
-		echo $timeTmp . "<br>";*/
-		break;
-	}
+	$data[$count]['ttl'] = $timeTmp;
+
 	$count++;
 	if ($linelimit == $count) {
 		// We've got all the data the user wanted to see - drop out of the foreach.
@@ -279,14 +266,14 @@ function sortOrder($column) {
 
 function stripPort($ip, $showPort = false) {
 	if (!$showPort) {
-		if (strpos($ip,',') > 0)
-			return substr($ip,0,strpos($ip,","));
+		if (strpos($ip,':') > 0)
+			return substr($ip,0,strpos($ip,":"));
 		else 
 			return ($ip);
 	}
 	else {
-		if (strpos($ip,',') > 0) {
-			return substr($ip,(strpos($ip,",")+1));
+		if (strpos($ip,':') > 0) {
+			return substr($ip,(strpos($ip,":")+1));
 		}
 		else 
 			return "&nbsp;";
@@ -418,7 +405,7 @@ if ($_GET['ip'] == '6') {
     <td class="listr"><?=$entry['protocol'];?></td>
     <td class="listr" align="right"><?=$entry['packets'];?></td>
     <td class="listr" align="right"><?=$entry['bytes'];?></td>
-    <td class="listr" align="right"><?=preg_replace("/^((00:0)|(00:)|(0))/","",strftime('%H:%M:%S',$entry['ttl']));?></td>    
+    <td class="listr" align="right"><?=strftime('%H:%M:%S',$entry['ttl']);?></td>    
   </tr>
 <?php endforeach; endif; ?>
 </table>
