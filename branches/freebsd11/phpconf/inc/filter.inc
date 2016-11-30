@@ -363,15 +363,21 @@ function filter_nat_rules_generate() {
 			else
 				$natif = $config['interfaces'][$rule['interface']]['if'];
 			
+			if ($rule['protocol'] == 'tcp/udp') {
+				$tmpproto = '{ tcp, udp }';
+			} else {
+				$tmpproto = $rule['protocol'];
+			}
+			
 			if ((!$extport[1]) || ($extport[0] == $extport[1])) {
 				$natrules .=
-					"rdr $natif {$extaddr} port {$extport[0]} -> {$target} " .
-					"port {$rule['local-port']} {$rule['protocol']}";
+					"rdr on $natif inet proto $tmpproto from any to ($natif) port {$extport[0]} -> {$target} " .
+					"port {$rule['local-port']} ";
 			} else {
 				$natrules .=
-					"rdr $natif {$extaddr} port {$extport[0]}-{$extport[1]} " .
+					"rdr on $natif inet proto $tmpproto from any to ($natif) port {$extport[0]}:{$extport[1]} " .
 					"-> {$target} " .
-					"port {$rule['local-port']} {$rule['protocol']}";
+					"port {$rule['local-port']} ";
 			}
 				
 			$natrules .= "\n";
@@ -383,8 +389,8 @@ function filter_nat_rules_generate() {
 		$natrules .= <<<EOD
 
 # PPTP
-rdr $wanif 0/0 port 0 -> {$pptpdcfg['redir']} port 0 gre
-rdr $wanif 0/0 port 1723 -> {$pptpdcfg['redir']} port 1723 tcp
+rdr on $wanif inet proto gre from any to ($natif) -> {$pptpdcfg['redir']}
+rdr on $wanif inet proto tcp from any to ($natif) port 1723 -> {$pptpdcfg['redir']} port 1723 
 
 EOD;
 	}
@@ -732,7 +738,7 @@ EOD;
 
 	foreach ($optcfg as $oc) {
 		if (!$oc['bridge'])
-			$ipfrules .= "block in $log quick on $wanif family {$inetfamily} from {$oc['sa']}/{$oc['sn']} to any\n";
+			$ipfrules .= "block in $log quick on $wanif {$inetfamily} from {$oc['sa']}/{$oc['sn']} to any\n";
 	}
 	
 	/* allow PPTP traffic if PPTP client is enabled on WAN */
@@ -951,9 +957,6 @@ EOD;
 # {$on} interface
 #---------------------------------------------------------------------------
 
-# block everything else in
-block in $log quick on {$oc['if']} $inetfamily from any to any
-
 # let out anything from the firewall host itself and decrypted IPsec traffic
 pass out quick on {$oc['if']} $inetfamily from any to any keep state 
 
@@ -1088,7 +1091,7 @@ EOD;
 			$line .= " in ";
 
 			if (isset($rule['log']))
-				$line .= "log first ";
+				$line .= "log ";
 
 			$line .= "quick ";
 			
@@ -1099,12 +1102,17 @@ EOD;
 			else if ($isl2tp)
 				$line .= "on l2tp$iif ";
 			else
-				$line .= "on " . $rule['interface'] ." ";
+				$line .= "on {$oc['if']} ";
 			
 			$line .= "$inetfamily ";
 
 			if (isset($rule['protocol'])) {
-				$line .= "proto {$rule['protocol']} ";
+				// support ipf legacy rules for tcp/udp by converting to pf syntax
+				if ($rule['protocol'] == "tcp/udp") {
+					$line .= "proto { tcp, udp } ";
+				} else {
+					$line .= "proto {$rule['protocol']} ";
+				}
 			}
 			
 			/* source address */
@@ -1263,10 +1271,6 @@ EOD;
 			
 			$ipfrules .= $line;
 		}
-		$ipfrules .= <<<EOD
-# block everything else in
-block in $log quick on $wanif $inetfamily from any to any
-EOD;
 	}
 	
 	$ipfrules .= <<<EOD

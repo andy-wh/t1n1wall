@@ -316,11 +316,11 @@ function fr_insline(id, on) {
 				  ?>
 				  <input name="toggle_<?=$i;?>" type="image" src="/img/<?=$iconfn;?>.png" width="11" height="11" title="click to toggle enabled/disabled status">
 				  <?php if (isset($filterent['log'])):
-							$iconfn = "log_s";
+							$iconfn = "log";
 						if (isset($filterent['disabled']))
 							$iconfn .= "_d";
 				  	?>
-				  <br><img src="/img/<?=$iconfn;?>.gif" width="11" height="15" border="0">
+				  <br><img src="/img/<?=$iconfn;?>.png" width="11" height="11" border="0">
 				  <?php endif; ?>
 				  </td>
                   <td class="listlr" onClick="fr_toggle(<?=$nrules;?>)"> 
