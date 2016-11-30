@@ -258,7 +258,7 @@ function format_ipf_ip($ipfip,$uport) {
 					 else 
 					 	$img = "/img/block.png";
 			 	?>
-			  <a href="?act=<?=$filterent['act'];?><?=$actstring;?><img src="/img/<?=$img;?>" width="11" height="11" align="middle" border="0" title="click to select action" alt="click to select action"></a>
+			  <a href="?act=<?=$filterent['act'];?><?=$actstring;?><img src="<?=$img;?>" width="11" height="11" align="middle" border="0" title="click to select action" alt="click to select action"></a>
 			  <?php if ($filterent['count']) echo $filterent['count'];?></td>
 			  <td class="listr" nowrap><?=htmlspecialchars($filterent['time']);?></td>
 			  <td class="listr" nowrap>
@@ -275,8 +275,8 @@ function format_ipf_ip($ipfip,$uport) {
                       <tr> 
                         <td width="100%"><strong><span class="red">Note:</span></strong><br>
                           There are many possibilities to filter this log.
-                          Just click on the accept (<img src="/img/pass.gif" alt="">) or
-			  deny symbol (<img src="/img/block.gif" alt="">) to filter for
+                          Just click on the accept (<img src="/img/pass.png" width="11" height="11" alt="">) or
+			  deny symbol (<img src="/img/block.png" width="11" height="11" alt="">) to filter for
 			  accepted or denied IP packets. Do the same for the desired
 			  interface, source/destination port or protocol. To deselect
 			  a selected filter entry, click on the column description above.

@@ -1101,7 +1101,9 @@ EOD;
 				$line .= "on enc0 ";
 			else if ($isl2tp)
 				$line .= "on l2tp$iif ";
-			
+			else
+				$line .= "on ". convert_friendly_interface_to_real_interface_name($oc['if']) . " ";
+
 			$line .= "$inetfamily ";
 
 			if (isset($rule['protocol'])) {

@@ -112,16 +112,28 @@ while (!feof($fd)) {
 	if (strstr($line2,"[")) $line2 = trim(fgets($fd));
 	$splitline2 = preg_split('/\s+/',$line2);
 	
-			
-	$srcTmp = $splitline1[4];
-	$data[$count]['srcip'] = stripPort($srcTmp);
-	$data[$count]['srcport'] = stripPort($srcTmp,true);
-	$dstTmp = $splitline1[2];
-	$data[$count]['dstip'] = stripPort($dstTmp);
-	$data[$count]['dstport'] = stripPort($dstTmp,true);
-	$data[$count]['protocol'] = $splitline1[1];
-	$data[$count]['packets'] = $splitline2[5];
-	$data[$count]['bytes'] = $splitline2[7];
+	if ( $splitline1[3] == "->" ) {
+		$srcTmp = $splitline1[2];
+		$data[$count]['srcip'] = stripPort($srcTmp);
+		$data[$count]['srcport'] = stripPort($srcTmp,true);
+		$dstTmp = $splitline1[4];
+		$data[$count]['dstip'] = stripPort($dstTmp);
+		$data[$count]['dstport'] = stripPort($dstTmp,true);
+		$data[$count]['protocol'] = $splitline1[1];
+		$data[$count]['packets'] = $splitline2[5];
+		$data[$count]['bytes'] = $splitline2[7];
+	} else {
+		$srcTmp = $splitline1[4];
+		$data[$count]['srcip'] = stripPort($srcTmp);
+		$data[$count]['srcport'] = stripPort($srcTmp,true);
+		$dstTmp = $splitline1[2];
+		$data[$count]['dstip'] = stripPort($dstTmp);
+		$data[$count]['dstport'] = stripPort($dstTmp,true);
+		$data[$count]['protocol'] = $splitline1[1];
+		$data[$count]['packets'] = reverseData($splitline2[5]);
+		$data[$count]['bytes'] = reverseData($splitline2[7]);
+	}		
+
 	$timeTmp = trim($splitline2[4]);
 	$timeLen = strlen($timeTmp);
 	$data[$count]['ttl'] = $timeTmp;
@@ -224,7 +236,11 @@ if ($_GET['order']) {
 	}
 }
 
-
+function reverseData($datator) {
+	$pieces = explode(':', $datator);
+	$rdata = $pieces[1] . ':' . $pieces[0];
+	return  $rdata;
+}
 
 function writeStats($fname, &$data) {
 	if ($_GET['ip']=='6') {
