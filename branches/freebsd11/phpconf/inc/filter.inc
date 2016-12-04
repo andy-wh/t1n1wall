@@ -1102,7 +1102,7 @@ EOD;
 			else if ($isl2tp)
 				$line .= "on l2tp$iif ";
 			else
-				$line .= "on ". convert_friendly_interface_to_real_interface_name($oc['if']) . " ";
+				$line .= "on ". convert_friendly_interface_to_real_interface_name($rule['interface']) . " ";
 
 			$line .= "$inetfamily ";
 

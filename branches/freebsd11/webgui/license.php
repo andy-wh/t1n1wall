@@ -33,7 +33,7 @@ $pgtitle = array("License");
 require("guiconfig.inc"); 
 ?>
 <?php include("fbegin.inc"); ?>
-            <p><strong>t1n1wall&reg; is Copyright &copy; 2015 by Andrew White 
+            <p><strong>t1n1wall&reg; is Copyright &copy; 2015-2017 by Andrew White 
               (<a href="mailto:mk@neon1.net">andywhite@t1n1wall.com</a>).<br>
               All rights reserved.</strong></p>
             <p><strong>t1n1wall&reg; is a fork of m0n0wall&reg 
@@ -254,4 +254,12 @@ All rights reserved.<br>
               <br>
               AICCU (<a href="http://www.sixxs.net/tools/aiccu/" target="_blank">http://www.sixxs.net/tools/aiccu/</a>)<br>
               Copyright (C) SixXS Staff &lt;info@sixxs.net&gt;. All rights reserved.
+              <br>
+              Icons (<a href="http://colebemis.com/feather/" target="_blank">Feather</a>, 
+               <a href="http://ionicons.com/" target="_blank"> IonIcons</a>,
+               <a href="http://fortawesome.github.io/Font-Awesome/" target="_blank"> FontAwesome</a>,
+               <a href="http://google.github.io/material-design-icons/" target="_blank"> Material Icons</a>, 
+               <a href="http://typicons.com/" target="_blank"> TypeIcons</a>)<br>
+               Converted to png at fa2png.io
+              <br>
 <?php include("fend.inc"); ?>

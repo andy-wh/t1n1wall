@@ -107,10 +107,16 @@ while (!feof($fd)) {
 		continue;
 
 	$splitline1 = preg_split('/\s+/',$line);
+
 	$line2 = trim(fgets($fd));
-	// tcp shows the second line as tcp data , liek sequenc numbers and wscale, so skip it
+	// tcp shows the second line as tcp data , like sequenc numbers and wscale, so skip it
 	if (strstr($line2,"[")) $line2 = trim(fgets($fd));
 	$splitline2 = preg_split('/\s+/',$line2);
+
+	// skip lines with ( , as these lines are NAT lines, with addr in brackets.  These traffic is accounted for 
+	// elsewhere in the output after NAT
+	if (strstr($line,"(")) 
+		continue;
 	
 	if ( $splitline1[3] == "->" ) {
 		$srcTmp = $splitline1[2];
@@ -130,8 +136,8 @@ while (!feof($fd)) {
 		$data[$count]['dstip'] = stripPort($dstTmp);
 		$data[$count]['dstport'] = stripPort($dstTmp,true);
 		$data[$count]['protocol'] = $splitline1[1];
-		$data[$count]['packets'] = reverseData($splitline2[5]);
-		$data[$count]['bytes'] = reverseData($splitline2[7]);
+		$data[$count]['packets'] = $splitline2[5];
+		$data[$count]['bytes'] = $splitline2[7];
 	}		
 
 	$timeTmp = trim($splitline2[4]);
@@ -267,6 +273,28 @@ function readStats($fname, &$data) {
 		$data = unserialize(fread($file, filesize($fname)));
 		fclose($file);			
 	}
+}
+
+function displayEntry($tmparray) {
+	$srcip=$tmparray['srcip'];
+	$dstip=$tmparray['dstip'];
+
+	if ($_GET['sfilter']) {
+		if ($_GET['sfilter'] == $srcip) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	if ($_GET['dfilter']) {
+		if ($_GET['dfilter'] == $dstip) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	return true;
 }
 
 function sortOrder($column) {
@@ -412,7 +440,7 @@ if ($_GET['ip'] == '6') {
     <td class="listhdr" align="right"><a href="?order=ttl<?=sortOrder('ttl');echo $filterPassThru;?>">TTL</a></td>
     <td class="list"></td>
   </tr>
-<?php if (is_array($data)): foreach ($data as $entry): ?>
+<?php if (is_array($data)): foreach (array_filter($data, "displayEntry") as $entry): ?>
   <tr>
     <td class="listlr"><?=displayIP($entry['srcip'],'srcip');?></td>
     <td class="listr"><?=$entry['srcport'];?></td>
