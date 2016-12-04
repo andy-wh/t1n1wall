@@ -44,7 +44,7 @@
 
 *** This is t1n1wall, version {$version}
     built on {$buildtime} for {$g['fullplatform']}
-    Copyright (C) 2015 by Andrew White. All rights reserved.
+    Copyright (C) 2015-2017 by Andrew White. All rights reserved.
     Visit http://www.t1n1wall.com for updates.
     
     
