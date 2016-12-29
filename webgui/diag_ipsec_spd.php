@@ -73,7 +73,7 @@ if ($fd) {
 			break;
 		if ($line[0] != "\t") {
 			if (is_array($cursp)) {
-				$spi=$cursp['spi'];
+				$spi=$cursp['spi'] + 1;
 				$spd[$spi] = $cursp;
 			}
 			$cursp = array();

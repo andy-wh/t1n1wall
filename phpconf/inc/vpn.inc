@@ -387,6 +387,14 @@ remote anonymous
         proposal
         \{
                 encryption_algorithm  aes;
+                hash_algorithm        sha256;
+                authentication_method pre_shared_key;
+                dh_group              modp1024;
+        }
+
+        proposal
+        \{
+                encryption_algorithm  aes;
                 hash_algorithm        sha1;
                 authentication_method pre_shared_key;
                 dh_group              modp1024;
@@ -404,7 +412,7 @@ remote anonymous
 sainfo anonymous
 \{
         encryption_algorithm     aes,3des;
-        authentication_algorithm hmac_sha1;
+        authentication_algorithm hmac_sha256,hmac_sha1;
         compression_algorithm    deflate;
         pfs_group                modp1024;
 }
