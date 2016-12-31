@@ -133,7 +133,7 @@ defCmdT("ipfw show", "/sbin/ipfw show");
 defCmdT("pfctl -s nat", "/sbin/pfctl -s nat");
 defCmdT("pfctl -v -s nat", "/sbin/pfctl -v -s nat");
 defCmdT("pfctl -s info", "/sbin/pfctl -s info");
-defCmdT("pfctl -s Tables", "/sbin/pfctl -s Tables");
+defCmdT("pfctl -vvvs Tables", "/sbin/pfctl -vvvvs Tables");
 defCmdT("pfctl -s rules", "/sbin/pfctl -s rules");
 
 defStrT("unparsed nat rules", filter_nat_rules_generate());

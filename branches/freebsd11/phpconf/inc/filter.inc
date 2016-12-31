@@ -83,7 +83,8 @@ function filter_configure($ipv4only = false) {
 		
 	fwrite($fd, $ipnatrules);
 	pclose($fd);
-
+	/* flush NAT before load */
+	mwexec("/sbin/pfctl -F nat");
  	mwexec("/sbin/pfctl -N -f /var/etc/pf.nat4.conf");
 	
 	/* create pools */
@@ -101,12 +102,15 @@ function filter_configure($ipv4only = false) {
 
 	fwrite($fd, $ipfrules);
 	pclose($fd);
+	/* flush rules before load */
+	mwexec("/sbin/pfctl -F rules");
 	mwexec("/sbin/pfctl -o none -R -f /var/etc/pf.ip4.conf");
 
 	if (ipv6enabled())
 		filter_configure6();
 	
 	if ($g['booting']) {
+		/* enable pf */
 		mwexec("/sbin/pfctl -e");	
 		echo "done\n";
 	}
@@ -119,17 +123,19 @@ function filter_pools_configure($updateonly = false, $ipv4only = false) {
 	global $config;
 	$ipfpools = filter_pools_generate($ipv4only);
 	if (($ipfpools != 1) && (!$updateonly)) {
-		/* flush pools */
-		exec("/sbin/ippool -F");
-		$fd = popen("/sbin/ippool -f - > /dev/null 2>&1", "w");
+		/* write pool configs */
+		$fd = fopen("/var/etc/pf.ippools.conf", "w");
 		if (!$fd) {
-			printf("Cannot open /sbin/ippool in filter_pools_configure()\n");
+			printf("Cannot open /var/etc/pf.ippools.conf in filter_configure()\n");
 			unlock_file("{$g['varrun_path']}/filter.lock");	
 			return 1;
 		}
 
 		fwrite($fd, $ipfpools);
 		pclose($fd);
+		/* flush pools before load */
+		mwexec("/sbin/pfctl -F Tables");
+		mwexec("/sbin/pfctl -T load -f /var/etc/pf.ippools.conf");
 	}
 
 }
@@ -138,6 +144,7 @@ function filter_pools_generate($ipv4only = false) {
 	global $config;
 	$a_ippools = &$config['ippools']['ippool'];
 	$a_ippoolmembers = &$config['ippools']['ippoolmember'];
+	/* havevalidpools get set TRUE if there is a member with an ip */
 	$havevalidpools = false;
 	if (isset($a_ippools) && isset($a_ippoolmembers)) {
 		foreach ($a_ippools as $ippools) {
@@ -147,19 +154,19 @@ function filter_pools_generate($ipv4only = false) {
 					list($addrpart,$subnetpart) = explode('/', $member['address']);
 					if (is_ipaddr4or6($addrpart)) {
 						$havevalidpools = true;
-						$addrlist .= $member['address'] . "; ";
+						$addrlist .= $member['address'] . " ";
 					}
 				}
 			}
 			if ($addrlist != "") {
-				$ipfpoolsyntax .= "table role = ipf type = tree name = \"" . $ippools['poolid'] . "\" {" . $addrlist . "};\n";
+				$ipfpoolsyntax .= "table <" . convert_poolid_to_friendly_name($ippools['poolid']) . "> persist counters {" . $addrlist . "}\n";
 			}
 		}
 	}
 
-	if (!$havevalidpools)
+/*	if (!$havevalidpools)
 	 return 1;
-
+*/
 	return $ipfpoolsyntax;
 }
 
@@ -178,7 +185,7 @@ function filter_configure6() {
 	fwrite($fd, $ipfrules_ipv6);
 	pclose($fd);
  	
-	mwexec("/sbin/pfctl -f /var/etc/pf.ip6.conf");
+	mwexec("/sbin/pfctl -o none -f /var/etc/pf.ip6.conf");
 	
 	unlock_file("{$g['varrun_path']}/filter6.lock");
 	return 0;
@@ -1140,7 +1147,7 @@ EOD;
 						case 'ippool':
 							/* check pool exists, incase orphaned rule */
 							if (is_array(get_ippool_details($rule['source']['poolid']))) {
-								$src =  "pool/'" . $rule['source']['poolid'] . "'";
+								$src =  "<" . $rule['source']['poolid'] . ">";
 							}
 							break;
 					}
@@ -1206,7 +1213,7 @@ EOD;
 						case 'ippool':
 							/* check pool exists, incase orphaned rule */
 							if (is_array(get_ippool_details($rule['destination']['poolid']))) {
-								$dst =  "pool/'" . $rule['destination']['poolid'] . "'";
+								$dst =  "<" . $rule['destination']['poolid'] . ">";
 							}
 							break;
 					}
