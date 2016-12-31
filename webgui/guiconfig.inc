@@ -426,6 +426,16 @@ function domainoverrides_sort() {
 	usort($config['dnsmasq']['domainoverrides'], "domainoverridescmp");
 }
 
+function ippoolmaps_sort() {
+	global $g, $config;
+
+	function ippoolmapscmp($a, $b) {
+		return strcasecmp($a['domain'], $b['domain']);
+	}
+
+	usort($config['dnsmasq']['ippoolmaps'], "ippoolmapscmp");
+}
+
 function staticmaps_sort($if) {
 	global $g, $config;
 

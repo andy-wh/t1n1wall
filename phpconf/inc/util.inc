@@ -349,6 +349,29 @@ function is_validaliasname($name) {
 		return false;
 }
 
+/* returns true if $pool is a valid ipPool */
+function is_ippool($poolid) {
+	global $config;
+	$ippools = &$config['ippools']['ippool'];
+
+	foreach ($ippools as $ippool) {
+		if ($ippool['poolid'] == $poolid)
+			return true;
+	}
+	return false;
+}
+
+function convert_poolid_to_friendly_name($poolid) {
+	global $config;
+	$ippools = &$config['ippools']['ippool'];
+
+	foreach ($ippools as $ippool) {
+		if ($ippool['poolid'] == $poolid)
+			return $ippool['name'];
+	}
+	return "Error: Pool not found";
+}
+
 function is_validippoolname($name) {
 	if (!preg_match("/[^a-zA-Z0-9-]/", $name))
 		return true;

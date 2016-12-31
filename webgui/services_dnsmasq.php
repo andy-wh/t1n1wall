@@ -43,12 +43,19 @@ if (!is_array($config['dnsmasq']['hosts'])) {
 	$config['dnsmasq']['hosts'] = array();
 }
 if (!is_array($config['dnsmasq']['domainoverrides'])) {
-	$config['dnsmasq']['domainoverrides'] = array();
+  $config['dnsmasq']['domainoverrides'] = array();
 }
+if (!is_array($config['dnsmasq']['ippoolmaps'])) {
+  $config['dnsmasq']['ippoolmaps'] = array();
+}
+
 hosts_sort();
 domainoverrides_sort();
+ippoolmaps_sort();
+
 $a_hosts = &$config['dnsmasq']['hosts'];
 $a_domainOverrides = &$config['dnsmasq']['domainoverrides'];
+$a_ippoolmaps = &$config['dnsmasq']['ippoolmaps'];
 
 if ($_POST) {
 
@@ -72,7 +79,16 @@ if ($_POST) {
 					header("Location: services_dnsmasq.php");
 					exit;
 				}
-		 	}
+      }
+      elseif ($type == 'ippoolmap') {
+        if ($a_ippoolmaps[$id]) {
+          unset($a_ippoolmaps[$id]);
+          write_config();
+          touch($d_dnsmasqdirty_path);
+          header("Location: services_dnsmasq.php");
+          exit;
+        }
+      }
 		}
 	}
 
@@ -243,5 +259,38 @@ if ($_POST) {
                   <td class="list"> <a href="services_dnsmasq_domainoverride_edit.php"><img src="/img/plus.png" width="17" height="17" border="0" alt=""></a></td>
 				</tr>
 			  </table>
+        <table width="100%" border="0" cellpadding="6" cellspacing="0" summary="IPpool widget">
+                <tr> 
+                  <td><p>Below you can set domain names that will populate an 
+                        IPpool when queried with the results of the query</p></td>
+                </tr>
+              </table>
+              <table width="100%" border="0" cellpadding="0" cellspacing="0">
+                <tr>
+                  <td width="35%" class="listhdrr">Domain</td>
+                  <td width="20%" class="listhdrr">IPpool</td>
+                  <td width="35%" class="listhdr">Description</td>
+                  <td width="10%" class="list"></td>
+        </tr>
+        <?php $i = 0; foreach ($a_ippoolmaps as $ippool): ?>
+                <tr>
+                  <td class="listlr">
+                    <?=strtolower($ippool['fqdn']);?>&nbsp;
+                  </td>
+                  <td class="listr">
+                    <?=convert_poolid_to_friendly_name($ippool['poolid']);?>&nbsp;
+                  </td>
+                  <td class="listbg">
+                    <?=htmlspecialchars($ippool['descr']);?>&nbsp;
+                  </td>
+                  <td valign="middle" nowrap class="list"> <a href="services_dnsmasq_ippoolmap_edit.php?id=<?=$i;?>"><img src="/img/e.png" width="17" height="17" border="0" alt=""></a>
+                     &nbsp;<input name="del_ippoolmap:<?=$i;?>" type="image" src="/img/x.png" width="17" height="17" title="delete IPpool map" alt="delete IPpool map" onclick="return confirm('Do you really want to delete this IPpool mapping?')"></td>
+        </tr>
+        <?php $i++; endforeach; ?>
+                <tr> 
+                  <td class="list" colspan="3"></td>
+                  <td class="list"> <a href="services_dnsmasq_ippoolmap_edit.php"><img src="/img/plus.png" width="17" height="17" border="0" alt=""></a></td>
+        </tr>
+        </table>
             </form>
 <?php include("fend.inc"); ?>
