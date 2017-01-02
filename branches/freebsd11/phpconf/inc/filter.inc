@@ -159,7 +159,7 @@ function filter_pools_generate($ipv4only = false) {
 				}
 			}
 			if ($addrlist != "") {
-				$ipfpoolsyntax .= "table <" . convert_poolid_to_friendly_name($ippools['poolid']) . "> persist counters {" . $addrlist . "}\n";
+				$ipfpoolsyntax .= "table <" . $ippools['poolid'] . "> persist counters {" . $addrlist . "}\n";
 			}
 		}
 	}
