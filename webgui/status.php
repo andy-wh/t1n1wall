@@ -151,6 +151,9 @@ if (ipv6enabled())
 
 defCmdT("df","/bin/df");
 
+defCmdT("ntpd.conf","cat /var/etc/ntpd.conf");
+defCmdT("ntpctl -s peers","/usr/sbin/ntpctl -s peers");
+
 defCmdT("racoon.conf","cat /var/etc/racoon.conf");
 defCmdT("SPD","/usr/local/sbin/setkey -DP");
 defCmdT("SAD","/usr/local/sbin/setkey -D");

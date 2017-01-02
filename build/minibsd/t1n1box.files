@@ -62,6 +62,7 @@ bin/t1n1box:usr/bin/top
 bin/t1n1box:usr/bin/touch
 # contents of usr/sbin
 bin/t1n1box:usr/sbin/ntpd
+bin/t1n1box:usr/sbin/ntpctl
 bin/t1n1box:usr/sbin/ancontrol
 bin/t1n1box:usr/sbin/arp
 bin/t1n1box:usr/sbin/chown

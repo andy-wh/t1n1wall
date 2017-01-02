@@ -13,7 +13,7 @@
 		<password>$1$AcfUMrUy$p8b4.XTQIOhVnf9OixiJT1</password>
 		<timezone>Etc/UTC</timezone>
 		<time-update-interval>300</time-update-interval>
-		<timeservers>0.m0n0wall.pool.ntp.org</timeservers>
+		<timeservers>time1.t1n1wall.com</timeservers>
 		<timeservers-randomize/>	<!-- first time usage only -->
 		<webgui>
 			<protocol>http</protocol>
