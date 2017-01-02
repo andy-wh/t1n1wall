@@ -655,7 +655,7 @@ function services_dnsmasq_configure() {
 
 		if (isset($config['dnsmasq']['ippoolmaps']) && is_array($config['dnsmasq']['ippoolmaps'])) {
 			foreach($config['dnsmasq']['ippoolmaps'] as $ippoolmap) {
-				$dnsmasqconf .= "ipset=/{$ippoolmap['fqdn']}/" . convert_poolid_to_friendly_name($ippoolmap['poolid']) . "\n";
+				$dnsmasqconf .= "ipset=/{$ippoolmap['fqdn']}/{$ippoolmap['poolid']}\n";
 			}
 		}
 
