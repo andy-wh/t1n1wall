@@ -274,8 +274,8 @@
  SYSCTL_VNET_PCPUSTAT(_net_inet_esp, IPSECCTL_STATS, stats,
      struct espstat, espstat,
      "ESP statistics (struct espstat, netipsec/esp_var.h");
-+SYSCTL_VNET_INT(_net_inet_esp, OID_AUTO,
-+    esp_ignore_natt_cksum,  CTLFLAG_RW,     &VNET_NAME(esp_ignore_natt_cksum), 0,
++SYSCTL_INT(_net_inet_esp, OID_AUTO,
++    esp_ignore_natt_cksum,  CTLFLAG_VNET | CTLFLAG_RW,     &VNET_NAME(esp_ignore_natt_cksum), 0,
 +    "Do not validate checksums of ESP protected packets in case of NAT-T");
  
  static int esp_input_cb(struct cryptop *op);
