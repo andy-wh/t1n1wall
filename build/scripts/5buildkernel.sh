@@ -50,8 +50,8 @@ fi
 		patch < $MW_BUILDPATH/freebsd11/build/patches/kernel/if_fxp.c.patch
 # glxsb crypto speed increase kern/132622
 		patch < $MW_BUILDPATH/freebsd11/build/patches/kernel/glxsb.c.orig.patch
-# ipsec patch for l2tp to work / causes kernel to not compile freebsd 11 with errors in xform_esp.c
-		#patch < $MW_BUILDPATH/freebsd11/build/patches/kernel/ipsec-tools.kern146190.patch
+# ipsec patch for l2tp to work 
+		patch < $MW_BUILDPATH/freebsd11/build/patches/kernel/ipsec-tools.kern146190.patch
 		
 # kernel compile
         cd $MW_BUILDPATH/tmp/sys/$MW_ARCH/conf
