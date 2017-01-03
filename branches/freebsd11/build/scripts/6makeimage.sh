@@ -23,7 +23,7 @@ makemfsroot() {
 	
 	echo $PLATFORM > $MW_BUILDPATH/t1n1fs/etc/platform
 	cd $MW_BUILDPATH/tmp
-	dd if=/dev/zero of=mfsroot-$PLATFORM bs=1k count=`du -d0 $MW_BUILDPATH/t1n1fs | cut -b1-5 | tr " " "+" | xargs -I {} echo "($SPARESPACE)+{}" | bc` > /dev/null 2>&1
+	dd if=/dev/zero of=mfsroot-$PLATFORM bs=1024 count=`du -B 1024 -d0 $MW_BUILDPATH/t1n1fs | cut -b1-5 | tr " " "+" | xargs -I {} echo "($SPARESPACE)+{}" | bc` > /dev/null 2>&1
 	mdconfig -a -t vnode -f mfsroot-$PLATFORM -u 20
 	disklabel -rw /dev/md20 auto
 	newfs -b 8192 -f 1024 -o space -m 0 /dev/md20 > /dev/null
@@ -52,51 +52,53 @@ makeimage() {
 	# Make staging area to help calc space
 	mkdir $MW_BUILDPATH/tmp/firmwaretmp
 	
-	cp $MW_BUILDPATH/tmp/kernel.gz $MW_BUILDPATH/tmp/firmwaretmp
-	cp $MW_BUILDPATH/tmp/mfsroot-$PLATFORM.gz $MW_BUILDPATH/tmp/firmwaretmp/mfsroot.gz
-	cp /boot/{loader,loader.rc} $MW_BUILDPATH/tmp/firmwaretmp
-	cp $MW_BUILDPATH/t1n1fs/conf.default/config.xml $MW_BUILDPATH/tmp/firmwaretmp
-
-	if [ $FIRMWAREIMG ]; then
-		cp $MW_BUILDPATH/images/$FIRMWAREIMG-$VERSION.img $MW_BUILDPATH/tmp/firmwaretmp
-	fi
+	fillDir $MW_BUILDPATH/tmp/firmwaretmp 
 
 	cd $MW_BUILDPATH/tmp
-	dd if=/dev/zero of=image.bin bs=1k count=`du -d0 $MW_BUILDPATH/tmp/firmwaretmp  | cut -b1-5 | tr " " "+" | xargs -I {} echo "($SPARESPACE)+{}" | bc` > /dev/null 2>&1
-	rm -rf $MW_BUILDPATH/tmp/firmwaretmp
+	dd if=/dev/zero of=image.bin bs=1024 count=`du -B 1024 -d0 $MW_BUILDPATH/tmp/firmwaretmp  | cut -b1-5 | tr " " "+" | xargs -I {} echo "($SPARESPACE)+{}" | bc` > /dev/null 2>&1
 	
 	mdconfig -a -t vnode -f $MW_BUILDPATH/tmp/image.bin -u 30
 	disklabel  -wn  /dev/md30 auto 2>/dev/null |  awk '/unused/{if (M==""){sub("unused","4.2BSD");M=1}}{print}' > md.label
-    bsdlabel -m  i386 -R -B -b /boot/boot /dev/md30 md.label
-    newfs -b 8192 -f 1024 -O 1 -U -o space -m 0 /dev/md30a > /dev/null
+    	bsdlabel -m  i386 -R -B -b /boot/boot /dev/md30 md.label
+    	newfs -b 8192 -f 1024 -O 1 -U -o space -m 0 /dev/md30a > /dev/null
+	
 	mount /dev/md30a /mnt
-	
-	cp $MW_BUILDPATH/tmp/kernel.gz /mnt/
-	cp $MW_BUILDPATH/tmp/mfsroot-$PLATFORM.gz /mnt/mfsroot.gz
-	mkdir -p /mnt/boot/kernel
-	cp /boot/loader /mnt/boot
-	cp $MW_BUILDPATH/freebsd11/build/boot/$PLATFORM/loader.rc /mnt/boot
-	if [ -r $MW_BUILDPATH/freebsd11/build/boot/$PLATFORM/boot.config ]; then
-		cp $MW_BUILDPATH/freebsd11/build/boot/$PLATFORM/boot.config /mnt
-	fi
 
+	fillDir /mnt
 	
-	if [ $FIRMWAREIMG ]; then
-		cp $MW_BUILDPATH/images/$FIRMWAREIMG-$VERSION.img /mnt/firmware.img
-	fi
-	
-	mkdir /mnt/conf
-	cp $MW_BUILDPATH/t1n1fs/conf.default/config.xml /mnt/conf
 	cd $MW_BUILDPATH/tmp
 	umount /mnt
 	mdconfig -d -u 30
+	
 	gzip -9f image.bin
 	if [ $FIRMWAREIMG ]; then
 		mv image.bin.gz $MW_BUILDPATH/images/$PLATFORM-installer-$VERSION.img
 	else
 		mv image.bin.gz $MW_BUILDPATH/images/$PLATFORM-$VERSION.img
 	fi
+	
+	rm -rf $MW_BUILDPATH/tmp/firmwaretmp
 	echo " done"
+}
+
+fillDir() {
+	FILLPATH=$1
+	cp $MW_BUILDPATH/tmp/kernel.gz $FILLPATH/
+	cp $MW_BUILDPATH/tmp/mfsroot-$PLATFORM.gz $FILLPATH/mfsroot.gz
+	mkdir -p $FILLPATH/boot/kernel
+	cp /boot/loader $FILLPATH/boot
+	cp $MW_BUILDPATH/freebsd11/build/boot/$PLATFORM/loader.rc $FILLPATH/boot
+	if [ -r $MW_BUILDPATH/freebsd11/build/boot/$PLATFORM/boot.config ]; then
+		cp $MW_BUILDPATH/freebsd11/build/boot/$PLATFORM/boot.config $FILLPATH/
+	fi
+
+	
+	if [ $FIRMWAREIMG ]; then
+		cp $MW_BUILDPATH/images/$FIRMWAREIMG-$VERSION.img $FILLPATH/firmware.img
+	fi
+	
+	mkdir $FILLPATH/conf
+	cp $MW_BUILDPATH/t1n1fs/conf.default/config.xml $FILLPATH/conf
 }
 
 # Creating mfsroots with 4MB spare space
@@ -109,7 +111,7 @@ makeimage() {
 	makeimage generic-pc-serial 2048
 	makeimage generic-pc 2048 generic-pc
 	makeimage generic-pc-serial 2048 generic-pc-serial
-	
+
 # Make ISO
 	echo -n "Making ISO..."
 	cd $MW_BUILDPATH/tmp
