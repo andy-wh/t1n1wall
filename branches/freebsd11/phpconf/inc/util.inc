@@ -473,6 +473,22 @@ function get_interface_list($ethernet = true, $wireless = true, $serial = true) 
 			}		
 		}
 	}
+
+	/* workaround netstat not showing wirelesscards in freebsd 11 */
+	if ($wireless) {
+		$wlanlist = shell_exec("/sbin/sysctl -n net.wlan.devices");
+		$wlandevices = array();
+		$wlandevices = explode(" ", $wlanlist);
+		foreach ($wlandevices as $wdevice) {
+			$twd = (trim($wdevice));
+			if (preg_match("/^(wi|an|ath|ral|rum|ural|zyd|run)\d/", $twd)) {
+				$iflist[$twd]['drvname'] = $twd;
+				$iflist[$twd]['mac'] = 'undetected';
+				$iflist[$twd]['up'] = false;
+			}		
+		}
+	}
+
 	return $iflist;
 }
 
