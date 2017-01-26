@@ -226,6 +226,7 @@ device			wlan_xauth			 #802.11 external authenticator support
 device			wlan_acl				#802.11 MAC-based ACL support
 device			an		# Aironet 4500/4800 802.11 wireless NICs.
 device			ath			# Atheros pci/cardbus NIC's
+device    		ath_pci
 device			ath_hal         # pci/cardbus chip support
 options         AH_SUPPORT_AR5416       # enable AR5416 tx/rx descriptors
 device			ath_rate_sample # SampleRate tx rate control for ath
