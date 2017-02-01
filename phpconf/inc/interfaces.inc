@@ -490,17 +490,16 @@ function interfaces_wlan_configure() {
 
 function interfaces_wlan_configure_encryption($if, $wlcfg) {
 	global $config, $g;
-	
-	/* kill any running hostapd */
-	killbypid("{$g['varrun_path']}/hostapd-$if.pid");
-	unlink_if_exists("{$g['varetc_path']}/hostapd-$if.conf");
-	
+		
 	/* killing hostapd leaves the interface in down state - make sure it's up again */
 	mwexec("/sbin/ifconfig " . escapeshellarg($if) . " up");
 
 	if ($wlcfg['wpa']['mode'] && $wlcfg['wpa']['mode'] != "none") {
 
 		if ($wlcfg['mode'] == "hostap") {
+			/* kill any running hostapd */
+			killbypid("{$g['varrun_path']}/hostapd-$if.pid");
+			unlink_if_exists("{$g['varetc_path']}/hostapd-$if.conf");
 			/* use WPA in hostap mode */
 			$hostapdcfg = generate_hostapd_config($if, $wlcfg);
 			
@@ -516,7 +515,27 @@ function interfaces_wlan_configure_encryption($if, $wlcfg) {
 			
 			/* start hostapd */
 			mwexec("/usr/sbin/hostapd -B -P {$g['varrun_path']}/hostapd-$if.pid {$g['varetc_path']}/hostapd-$if.conf");
-		}
+			
+		} elseif ($wlcfg['mode'] == "bss") {
+			/* kill any running wpa_supplicant */
+			killbypid("{$g['varrun_path']}/wpa_supplicant-$if.pid");
+			unlink_if_exists("{$g['varetc_path']}/wpa_supplicant-$if.conf");
+
+			$wpa_supplicantcfg = generate_wpa_supplicant_config($if, $wlcfg);
+			
+			/* write config to temporary file */
+			$fd = fopen("{$g['varetc_path']}/wpa_supplicant-$if.conf", "w");
+			if (!$fd) {
+				echo("Error: cannot open wpa_supplicant-$if.conf in interfaces_wlan_configure_encryption().\n");
+				return 1;
+			}
+	
+			fwrite($fd, $wpa_supplicantcfg);
+			fclose($fd);
+			
+			/* start wpa_supplicant */
+			mwexec("/usr/sbin/wpa_supplicant -i $if -B -P {$g['varrun_path']}/wpa_supplicant-$if.pid -c {$g['varetc_path']}/wpa_supplicant-$if.conf ");
+		} 
 		
 	} else {
 		/* use WEP (or no encryption) */
@@ -1407,6 +1426,17 @@ function get_interface_mac($interface) {
         $alink = preg_split("/\s+/", $linkinfo[0]);
         $mac = chop($alink[3]);
         return $mac;
+}
+
+function generate_wpa_supplicant_config($if, $wlcfg) {
+	$config = <<<EOD
+
+network={
+  ssid="{$wlcfg['ssid']}"
+  psk="{$wlcfg['wpa']['psk']}"
+}
+
+EOD;
 }
 
 function generate_hostapd_config($if, $wlcfg) {
