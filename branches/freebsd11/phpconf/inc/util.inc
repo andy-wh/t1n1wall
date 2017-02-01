@@ -481,10 +481,19 @@ function get_interface_list($ethernet = true, $wireless = true, $serial = true) 
 		$wlandevices = explode(" ", $wlanlist);
 		foreach ($wlandevices as $wdevice) {
 			$twd = (trim($wdevice));
-			if (preg_match("/^(wi|an|ath|ral|rum|ural|zyd|run)\d/", $twd)) {
-				$iflist[$twd]['drvname'] = $twd;
-				$iflist[$twd]['mac'] = 'undetected';
+			if (preg_match($g['wireless_regex'], $twd)) {
+				//$iflist[$twd]['drvname'] = $twd;
+				$iflist[$twd]['mac'] = 'xx:xx:xx:xx:xx:xx';
 				$iflist[$twd]['up'] = false;
+				/* try to figure out driver name */
+				if (preg_match("/$twd:\s+<(.+?)>/", $dmesg, $matches)) {
+					/* truncate at 40 characters; some of these get really long
+					   and mess up the CLI and webGUI display */
+					$drvname = $matches[1];
+					if (strlen($drvname) > 40)
+						$drvname = substr($drvname, 0, 40) . "...";
+					$iflist[$twd]['drvname'] = $drvname;
+				}
 			}		
 		}
 	}
