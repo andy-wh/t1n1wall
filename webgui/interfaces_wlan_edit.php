@@ -144,9 +144,6 @@ if ($_POST) {
 			else if (!$is_chan_11a && $is_std_11a)
 				$input_errors[] = "802.11(n)a can only be selected if an 802.11a channel is selected too.";
 		
-			/* currently, WPA is only supported in AP (hostap) mode */
-			if ($_POST['wpamode'] != "none" && $pconfig['mode'] != "hostap")
-				$input_errors[] = "WPA is only supported in hostap mode.";
 		}
 
 		if (!$input_errors) {

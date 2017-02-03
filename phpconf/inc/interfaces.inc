@@ -1437,6 +1437,8 @@ network={
 }
 
 EOD;
+
+	return $config;
 }
 
 function generate_hostapd_config($if, $wlcfg) {

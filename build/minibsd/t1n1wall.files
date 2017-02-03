@@ -1,2 +1,4 @@
 # contents of /libexec
 libexec/ld-elf.so.1
+# contents of /usr/sbin
+usr/sbin/wpa_supplicant

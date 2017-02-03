@@ -60,7 +60,6 @@ bin/t1n1box:usr/bin/tail
 bin/t1n1box:usr/bin/tar
 bin/t1n1box:usr/bin/top
 bin/t1n1box:usr/bin/touch
-bin/t1n1box:usr/bin/wpa_supplicant
 # contents of usr/sbin
 bin/t1n1box:usr/sbin/ntpd
 bin/t1n1box:usr/sbin/ntpctl
