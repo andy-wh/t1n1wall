@@ -111,11 +111,11 @@ export CC=gcc46
         install -s $WRKDIRPREFIX/$PORTSDIR/security/ipsec-tools/work/ipsec-tools-*/src/libipsec/.libs/libipsec.so.0 $MW_BUILDPATH/t1n1fs/usr/local/lib
         mv Makefile.orig Makefile
 # strongswan
-        cd $PORTSDIR/security/strongswan
-        make
-        install -s $WRKDIRPREFIX/$PORTSDIR/security/strongswan/work/stage/usr/local/sbin/swanctl $MW_BUILDPATH/t1n1fs/usr/local/sbin
-		install $WRKDIRPREFIX/$PORTSDIR/security/strongswan/work/stage/usr/local/sbin/ipsec $MW_BUILDPATH/t1n1fs/usr/local/sbin
-		install -s $WRKDIRPREFIX/$PORTSDIR/security/strongswan/work/stage/usr/local/sbin/charon-cmd $MW_BUILDPATH/t1n1fs/usr/local/sbin
+#       cd $PORTSDIR/security/strongswan
+#       make
+#       install -s $WRKDIRPREFIX/$PORTSDIR/security/strongswan/work/stage/usr/local/sbin/swanctl $MW_BUILDPATH/t1n1fs/usr/local/sbin
+#	install $WRKDIRPREFIX/$PORTSDIR/security/strongswan/work/stage/usr/local/sbin/ipsec $MW_BUILDPATH/t1n1fs/usr/local/sbin
+#	install -s $WRKDIRPREFIX/$PORTSDIR/security/strongswan/work/stage/usr/local/sbin/charon-cmd $MW_BUILDPATH/t1n1fs/usr/local/sbin
 # dhcp6
 	cd $PORTSDIR/net/dhcp6
         make
