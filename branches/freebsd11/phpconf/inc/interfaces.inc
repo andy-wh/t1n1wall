@@ -534,7 +534,7 @@ function interfaces_wlan_configure_encryption($if, $wlcfg) {
 			fclose($fd);
 			
 			/* start wpa_supplicant */
-			mwexec("/usr/sbin/wpa_supplicant -i $if -B -P {$g['varrun_path']}/wpa_supplicant-$if.pid -c {$g['varetc_path']}/wpa_supplicant-$if.conf ");
+			mwexec("/usr/sbin/wpa_supplicant -s -i $if -B -P {$g['varrun_path']}/wpa_supplicant-$if.pid -c {$g['varetc_path']}/wpa_supplicant-$if.conf ");
 		} 
 		
 	} else {
@@ -1431,9 +1431,37 @@ function get_interface_mac($interface) {
 function generate_wpa_supplicant_config($if, $wlcfg) {
 	$config = <<<EOD
 
+fast_reauth=1
+ap_scan=1
+eapol_version=2
+
 network={
-  ssid="{$wlcfg['ssid']}"
-  psk="{$wlcfg['wpa']['psk']}"
+	scan_ssid=1
+	key_mgmt=WPA-PSK
+	ssid="{$wlcfg['ssid']}"
+	psk="{$wlcfg['wpa']['psk']}"
+
+EOD;
+
+	# set wpa or wpa2 or both
+    if ($wlcfg['wpa']['version'] == 1)
+		$config .= "	proto=WPA\n";
+	else if ($wlcfg['wpa']['version'] == 2)
+		$config .= "	proto=RSN\n";
+	else
+		$config .= "	proto=WPA RSN\n";
+		
+
+	# set cipher tkip or ccmp or both
+	if ($wlcfg['wpa']['cipher'] == "tkip")
+		$config .= "	pairwise=TKIP\n";
+	else if ($wlcfg['wpa']['cipher'] == "ccmp")
+		$config .= "	pairwise=CCMP\n";
+	else
+		$config .= "	pairwise=TKIP CCMP\n";
+		
+
+	$config .= <<<EOD
 }
 
 EOD;
