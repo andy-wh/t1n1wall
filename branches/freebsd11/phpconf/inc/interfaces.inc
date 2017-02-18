@@ -433,7 +433,10 @@ function interfaces_optional_configure_if6($opti) {
 
 function interfaces_wlan_configure() {
 	global $config, $g;
-	
+
+	if ($g['booting'])
+		echo "Configuring wlan interfaces... ";
+
 	/* wireless configuration */
 	if (is_array($config['wlans']['wlan']) && count($config['wlans']['wlan'])) {
 		$i = 0;
@@ -484,6 +487,8 @@ function interfaces_wlan_configure() {
 			$i++;
 		}
 	}
+	if ($g['booting'])
+		echo "done\n";
 	
 	return 0;
 }
@@ -610,6 +615,12 @@ function interfaces_wan_configure() {
 	
 	if (isset($config['system']['polling']))
 		mwexec("/sbin/ifconfig " . escapeshellarg($wancfg['if']) .  " polling") ;
+	
+	/* if this is a wireless interface, we need to configure it again
+	   as wpa_supplicant will have exited on ifconfig down earlier
+	   in this function */
+	if (strpos($wancfg['if'], "wlan") !== false)
+		interfaces_wlan_configure();
 	
 	switch ($wancfg['ipaddr']) {
 	
