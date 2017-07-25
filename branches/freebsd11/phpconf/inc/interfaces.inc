@@ -702,19 +702,6 @@ function interfaces_wan_configure6($newwanip = false) {
 	mwexec('/sbin/ifconfig ' . $wanif . ' inet6 -accept_rtadv no_radr');	
 	mwexec("/sbin/sysctl net.inet6.ip6.rfc6204w3=0");
 	
-	/* kill any running aiccu */
-	if (file_exists("{$g['varrun_path']}/aiccu.pid")) {
-		sigkillbypid("{$g['varrun_path']}/aiccu.pid", "TERM");
-		
-		/* AICCU doesn't exit immediately after receiving SIGTERM, as it only polls
-		   its "running" flag once per second. We give it 3 seconds to exit, and then send
-		   a SIGKILL if necessary */
-		for ($i = 0; $i < 30 && file_exists("{$g['varrun_path']}/aiccu.pid"); $i++)
-			usleep(100000);
-		if (file_exists("{$g['varrun_path']}/aiccu.pid"))
-			sigkillbypid("{$g['varrun_path']}/aiccu.pid", "KILL");
-	}
-	
 	if (ipv6enabled()) {
 		if ($wancfg['ipaddr6'] == "6to4") {
 			/* obtain current IPv4 address and make a 6to4 address out of it */
@@ -748,58 +735,6 @@ function interfaces_wan_configure6($newwanip = false) {
 			}
 			if ($config['interfaces']['lan']['ipaddr6'] == "DHCP-PD") {
 				services_dhcp6c_configure();
-			}
-		} else if ($wancfg['ipaddr6'] == "aiccu") {
-			/* fire up AICCU, which will take care of setting the IP address
-			   on gif0 and adding the default route */
-			
-			/* can only start AICCU once the IPv4 connectivity is
-			   ready; otherwise it will exit immediately... */
-			if ($newwanip || is_ipaddr($wancfg['ipaddr'])) {
-				$aiccuconf = <<<EOD
-username {$wancfg['aiccu']['username']}
-password {$wancfg['aiccu']['password']}
-tunnel_id {$wancfg['aiccu']['tunnelid']}
-ipv6_interface gif0
-daemonize true
-automatic true
-requiretls false
-pidfile {$g['varrun_path']}/aiccu.pid
-defaultroute true
-
-EOD;
-
-				$fd = fopen("{$g['varetc_path']}/aiccu.conf", "w");
-				fwrite($fd, $aiccuconf);
-				fclose($fd);
-			
-				mwexec("/usr/local/sbin/sixxs-aiccu start {$g['varetc_path']}/aiccu.conf");
-			
-				/* at this point, it can take anywhere from a millisecond to forever
-				   until gif0 has been configured by AICCU. Unfortunately, the
-				   "setupscript" option in aiccu.conf isn't actually implemented
-				   under Unix, so to figure out when gif0 comes up, we need to
-				   watch it with a little shell script... */
-				$watchsh = <<<EOD
-#!/bin/sh
-
-while true; do
-	/sbin/ifconfig gif0 > /dev/null 2>&1
-	if [ $? = 0 ]; then
-		sleep 1
-		/etc/rc.newwanip6
-		exit
-	fi
-	sleep 1
-done
-
-EOD;
-				$fd = fopen("{$g['tmp_path']}/gifwatch.sh", "w");
-				fwrite($fd, $watchsh);
-				fclose($fd);
-				chmod("{$g['tmp_path']}/gifwatch.sh", 0755);
-			
-				mwexec_bg("{$g['tmp_path']}/gifwatch.sh");
 			}
 		} else {
 			if ($wancfg['ipaddr6'] && $wancfg['subnet6'] && ($wancfg['tunnel6'] || $wancfg['gateway6'])) {
@@ -1369,10 +1304,6 @@ function get_real_wan_interface($ipv6 = false) {
 	if ($ipv6) {
 		if ($wancfg['ipaddr6'] == "6to4")
 			$wanif = "stf0";
-		else if ($wancfg['ipaddr6'] == "aiccu" && !isset($config['interfaces']['wan']['aiccu']['ayiya']))
-			$wanif = "gif0";
-		else if ($wancfg['ipaddr6'] == "aiccu" && isset($config['interfaces']['wan']['aiccu']['ayiya']))
-			$wanif = "tun0";
 		else if ($wancfg['tunnel6'])
 			$wanif = "gif0";
 		else if ($wancfg['ipaddr6'] == "ppp")
