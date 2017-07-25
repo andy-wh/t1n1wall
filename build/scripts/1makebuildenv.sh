@@ -20,11 +20,14 @@ fi
 	if [ ! -x /usr/local/bin/gcc46 ]; then
 		pkg install -y gcc46
 		ln -s /usr/local/bin/gcc46 /usr/local/bin/gcc
+		rm -rf /usr/local/lib/gcc46/gcc/*/*/include-fixed/
 	fi
 	if [ ! -x /usr/local/bin/makedepend ]; then
                 pkg install -y makedepend 
-        fi
-
+    fi
+	if [ ! -x /usr/local/bin/makedepend ]; then
+                pkg install -y makedepend 
+	fi
 	cd $MW_BUILDPATH
 
 # ensure system time is correct

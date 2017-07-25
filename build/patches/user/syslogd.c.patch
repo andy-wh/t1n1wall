@@ -1,5 +1,5 @@
---- syslogd.c.orig	2015-03-22 00:33:53.000000000 +0000
-+++ syslogd.c	2015-03-22 00:34:00.000000000 +0000
+--- syslogd.c.orig	2017-07-21 00:42:21.000000000 +0100
++++ syslogd.c	2017-07-25 23:43:43.171565000 +0100
 @@ -66,6 +66,7 @@
   *   by Peter da Silva.
   * -u and -v by Harlan Stenn.
@@ -7,16 +7,8 @@
 + * Ring buffer code by Jeff Wheelhouse.
   */
  
- #define	MAXLINE		1024		/* maximum line length */
-@@ -88,6 +89,7 @@
- #include <sys/time.h>
- #include <sys/resource.h>
- #include <sys/syslimits.h>
-+#include <sys/mman.h>
- #include <sys/types.h>
- 
- #include <netinet/in.h>
-@@ -111,6 +113,7 @@
+ /* Maximum number of characters in time of last occurrence */
+@@ -114,6 +115,7 @@
  
  #include "pathnames.h"
  #include "ttymsg.h"
@@ -24,15 +16,15 @@
  
  #define SYSLOG_NAMES
  #include <sys/syslog.h>
-@@ -118,6 +121,7 @@
+@@ -121,6 +123,7 @@
  const char	*ConfFile = _PATH_LOGCONF;
  const char	*PidFile = _PATH_LOGPID;
  const char	ctty[] = _PATH_CONSOLE;
-+const char	ring_magic[] = "CLOG";
++const char      ring_magic[] = "CLOG";
+ static const char	include_str[] = "include";
+ static const char	include_ext[] = ".conf";
  
- #define	dprintf		if (Debug) printf
- 
-@@ -183,6 +187,11 @@
+@@ -197,6 +200,11 @@
  			char	f_pname[MAXPATHLEN];
  			pid_t	f_pid;
  		} f_pipe;
@@ -43,8 +35,8 @@
 +		} f_ring;
  	} f_un;
  	char	f_prevline[MAXSVLINE];		/* last message logged */
- 	char	f_lasttime[16];			/* time of last occurrence */
-@@ -261,10 +270,12 @@
+ 	char	f_lasttime[MAXDATELEN];		/* time of last occurrence */
+@@ -275,10 +283,12 @@
  #define F_USERS		5		/* list of users */
  #define F_WALL		6		/* everyone logged on */
  #define F_PIPE		7		/* pipe to program */
@@ -59,7 +51,7 @@
  };
  
  static struct filed *Files;	/* Log files that we write to */
-@@ -329,6 +340,8 @@
+@@ -344,6 +354,8 @@
  static void	printline(const char *, char *, int);
  static void	printsys(char *);
  static int	p_open(const char *, pid_t *);
@@ -67,8 +59,8 @@
 +static ssize_t	rbwritev(struct filed *, struct iovec *, int);
  static void	readklog(void);
  static void	reapchild(int);
- static void	usage(void);
-@@ -1287,6 +1300,21 @@
+ static const char *ttymsg_check(struct iovec *, int, char *, int);
+@@ -1339,6 +1351,21 @@
  		}
  		break;
  
@@ -90,7 +82,7 @@
  	case F_PIPE:
  		dprintf(" %s\n", f->f_un.f_pipe.f_pname);
  		v->iov_base = lf;
-@@ -1589,6 +1617,10 @@
+@@ -1830,6 +1857,10 @@
  			}
  			f->f_un.f_pipe.f_pid = 0;
  			break;
@@ -101,7 +93,7 @@
  		}
  		next = f->f_next;
  		if (f->f_program) free(f->f_program);
-@@ -1730,6 +1762,10 @@
+@@ -1895,6 +1926,10 @@
  				}
  				break;
  
@@ -112,7 +104,7 @@
  			case F_PIPE:
  				printf("%s", f->f_un.f_pipe.f_pname);
  				break;
-@@ -1780,6 +1816,7 @@
+@@ -1945,6 +1980,7 @@
  	const char *p, *q;
  	char *bp;
  	char buf[MAXLINE], ebuf[100];
@@ -120,7 +112,7 @@
  
  	dprintf("cfline(\"%s\", f, \"%s\", \"%s\")\n", line, prog, host);
  
-@@ -2000,6 +2037,38 @@
+@@ -2165,6 +2201,38 @@
  		}
  		break;
  
@@ -159,7 +151,7 @@
  	case '|':
  		f->f_un.f_pipe.f_pid = 0;
  		(void)strlcpy(f->f_un.f_pipe.f_pname, p + 1,
-@@ -2743,6 +2812,48 @@
+@@ -2909,6 +2977,48 @@
  	return (socks);
  }
  

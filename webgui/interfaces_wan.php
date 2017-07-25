@@ -498,7 +498,7 @@ function type_change() {
                   <td valign="top" class="vncellreq">IPv6 mode</td>
                   <td class="vtable"> 
                     <select name="ipv6mode" class="formfld" id="ipv6mode" onchange="enable_change(false)">
-                      <?php $opts = array('disabled' => 'disabled', 'static' => 'static', '6to4' => '6to4', 'tunnel' => 'Tunnel', 'ppp' => 'PPP', 'aiccu' => 'AICCU', 'DHCP' => 'DHCP');
+                      <?php $opts = array('disabled' => 'disabled', 'static' => 'static', '6to4' => '6to4', 'tunnel' => 'Tunnel', 'ppp' => 'PPP', 'DHCP' => 'DHCP');
 						foreach ($opts as $optn => $optd) {
 							echo "<option value=\"$optn\"";
 							if ($optn == $pconfig['ipv6mode']) echo "selected";
@@ -510,8 +510,7 @@ function type_change() {
 					nearest gateway. You also need to set your LAN interface (and optional interfaces, if present)
 					to 6to4 mode for it to work properly.<br>
 					To use tunnel mode (IPv6-in-IPv4 tunnel), you need a configured remote endpoint (e.g. tunnel broker).
-					PPP mode can be used if your ISP provides native IPv6 connectivity over PPPoE or PPTP.
-					AICCU is used with dynamic tunnels from SixXS (only heartbeat tunnels are supported).</td>
+					PPP mode can be used if your ISP provides native IPv6 connectivity over PPPoE or PPTP.</td>
                 </tr>
                 <tr> 
                   <td valign="top" class="vncellreq">DHCPv6 DUID</td>
@@ -545,30 +544,6 @@ function type_change() {
                   <td class="vtable"> 
                     <input name="tunnel6" type="text" class="formfld" id="tunnel6" size="30" value="<?=htmlspecialchars($pconfig['tunnel6']);?>"><br>
 					The IPv4 address of the remote tunnel endpoint (only when using tunnel mode).
-                   </td>
-                </tr>
-                <tr> 
-                  <td valign="top" class="vncellreq">AICCU</td>
-                  <td class="vtable"> 
-                    <table border="0" cellspacing="0" cellpadding="0">
-                      <tr> 
-                        <td>Username:&nbsp;&nbsp;</td>
-                        <td><input name="aiccu_username" type="text" class="formfld" id="aiccu_username" size="20" value="<?=htmlspecialchars($pconfig['aiccu_username']);?>"></td>
-                      </tr>
-                      <tr> 
-                        <td>Password:&nbsp;&nbsp;</td>
-                        <td><input name="aiccu_password" type="password" class="formfld" id="aiccu_password" size="20" value="<?=htmlspecialchars($pconfig['aiccu_password']);?>"></td>
-					  </tr>
-					  <tr> 
-                        <td>Tunnel ID:&nbsp;&nbsp;</td>
-                        <td><input name="aiccu_tunnelid" type="text" class="formfld" id="aiccu_tunnelid" size="10" value="<?=htmlspecialchars($pconfig['aiccu_tunnelid']);?>"></td>
-					  </tr>
-                      <tr> 
-	                    <td>AYIYA:&nbsp;&nbsp;</td>
-	                    <td><input type="checkbox" name="aiccu_ayiya" id="aiccu_ayiya" value="1" <?php if ($pconfig['aiccu_ayiya']) echo "checked";?>></td>
-					  </tr>
-                    </table><br>
-					Enter your SixXS account information here (only when using AICCU).
                    </td>
                 </tr>
 				<?php endif; ?>

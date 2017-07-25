@@ -84,7 +84,7 @@ export CC=gcc46
         rm -Rf dudders-1.04
         tar -zxf $MW_BUILDPATH/freebsd11/build/local-sources/dudders-1.04.tar.bz2
         cd dudders-1.04
-        ./configure --with-crypto=openssl
+        ./configure --with-crypto=openssl CFLAGS="-DNDEBUG -O2"
         make
         install -s dudders $MW_BUILDPATH/t1n1fs/usr/local/bin
         
@@ -100,16 +100,10 @@ export CC=gcc46
 	install -s $WRKDIRPREFIX/$PORTSDIR/net/isc-dhcp43-client/work/dhcp-*/client/dhclient $MW_BUILDPATH/t1n1fs/sbin/
 # ipsec-tools
         cd $PORTSDIR/security/ipsec-tools
-        patch < $MW_BUILDPATH/freebsd11/build/patches/packages/ipsec-tools.Makefile.patch
-        cp $MW_BUILDPATH/freebsd11/build/patches/packages/ipsec-tools.wildcard.patch $PORTSDIR/security/ipsec-tools/files
-        cp $MW_BUILDPATH/freebsd11/build/patches/packages/ipsec-tools.fqdn.patch $PORTSDIR/security/ipsec-tools/files
-        cp $MW_BUILDPATH/freebsd11/build/patches/packages/ipsec-tools.patch-zz-local-3.diff $PORTSDIR/security/ipsec-tools/files
-        cp $MW_BUILDPATH/freebsd11/build/patches/packages/ipsec-tools.kern146190_NATOa.patch $PORTSDIR/security/ipsec-tools/files        
         make
         install -s $WRKDIRPREFIX/$PORTSDIR/security/ipsec-tools/work/ipsec-tools-*/src/racoon/.libs/racoon $MW_BUILDPATH/t1n1fs/usr/local/sbin
         install -s $WRKDIRPREFIX/$PORTSDIR/security/ipsec-tools/work/ipsec-tools-*/src/setkey/.libs/setkey $MW_BUILDPATH/t1n1fs/usr/local/sbin
         install -s $WRKDIRPREFIX/$PORTSDIR/security/ipsec-tools/work/ipsec-tools-*/src/libipsec/.libs/libipsec.so.0 $MW_BUILDPATH/t1n1fs/usr/local/lib
-        mv Makefile.orig Makefile
 # strongswan
 #       cd $PORTSDIR/security/strongswan
 #       make
@@ -121,10 +115,6 @@ export CC=gcc46
         make
 	install -s $WRKDIRPREFIX/$PORTSDIR/net/dhcp6/work/wide-dhc*/dhcp6c $MW_BUILDPATH/t1n1fs/usr/local/sbin
 	install -s $WRKDIRPREFIX/$PORTSDIR/net/dhcp6/work/wide-dhc*/dhcp6s $MW_BUILDPATH/t1n1fs/usr/local/sbin
-# sixxs-aiccu		
-	cd $PORTSDIR/net/sixxs-aiccu
-        make
-	install -s $WRKDIRPREFIX/$PORTSDIR/net/sixxs-aiccu/work/aiccu/unix-console/aiccu $MW_BUILDPATH/t1n1fs/usr/local/sbin/sixxs-aiccu
 # mpd5
 	cd $PORTSDIR/net/mpd5
         make

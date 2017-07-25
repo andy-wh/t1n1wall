@@ -1,12 +1,12 @@
---- Makefile.orig	2016-02-07 23:56:30.192776000 +0000
-+++ Makefile	2016-02-07 23:56:44.308233000 +0000
-@@ -308,11 +308,6 @@
+--- Makefile.orig	2017-07-25 12:04:56.048959000 +0100
++++ Makefile	2017-07-25 12:05:13.400626000 +0100
+@@ -317,11 +317,6 @@
  LDADD+=		-lcrypto
  DPADD+=		${LIBCRYPTO}
  
 -.if exists ( /usr/lib/libexecinfo.so )
 -LDADD+=		-lexecinfo
--COPTS+=		-DUSE_BACKTRACE
+-CFLAGS+=	-DUSE_BACKTRACE
 -.endif
 -
  # Now add standard sources
