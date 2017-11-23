@@ -71,9 +71,9 @@ export CC=gcc46
 	install -s modem-stats $MW_BUILDPATH/t1n1fs/sbin
 # dnsmasq
         cd $MW_BUILDPATH/tmp
-        rm -Rf dnsmasq-2.76
-        tar -zxf $MW_BUILDPATH/freebsd11/build/local-sources/dnsmasq-2.76.tar.gz
-        cd dnsmasq-2.76
+        rm -Rf dnsmasq-2.78
+        tar -zxf $MW_BUILDPATH/freebsd11/build/local-sources/dnsmasq-2.78.tar.gz
+        cd dnsmasq-2.78
         cp $MW_BUILDPATH/freebsd11/build/patches/packages/patch-dnsmasq-iscreader.patch .
         # patch < patch-dnsmasq-iscreader.patch
         make COPTS+=-DNO_AUTH COPTS+=-DNO_TFTP COPTS+=-DNO_SCRIPT COPTS+=-DNO_LARGEFILE 
